@@ -98,6 +98,67 @@ export function buildCode(opts: {
   ].join("\n");
 }
 
+/** Monta um notebook .ipynb (string JSON) com a busca da pessoa, para o Colab. */
+export function buildNotebookIpynb(code: string): string {
+  const lines = (text: string) => text.split("\n").map((l) => `${l}\n`);
+  // Remove a 1a linha "# pip install ..." do snippet; o install vira célula própria.
+  const queryCode = code.replace(/^# pip install[^\n]*\n/, "");
+
+  const nb = {
+    cells: [
+      {
+        cell_type: "markdown",
+        metadata: {},
+        source: [
+          "# Busca juscraper\n",
+          "\n",
+          "Notebook gerado pela [ferramenta do LabDados FGV](https://lab-dados.github.io/juscraper-app/) ",
+          "com os parametros exatos da sua busca. Rode as celulas em ordem.\n",
+        ],
+      },
+      {
+        cell_type: "code",
+        metadata: {},
+        execution_count: null,
+        outputs: [],
+        source: ["%pip install -q juscraper openpyxl"],
+      },
+      {
+        cell_type: "code",
+        metadata: {},
+        execution_count: null,
+        outputs: [],
+        source: lines(queryCode),
+      },
+    ],
+    metadata: {
+      colab: { provenance: [] },
+      kernelspec: { name: "python3", display_name: "Python 3" },
+      language_info: { name: "python" },
+    },
+    nbformat: 4,
+    nbformat_minor: 0,
+  };
+  return JSON.stringify(nb, null, 1);
+}
+
+/** Cria um Gist (via proxy) com o notebook e retorna a URL do Colab. */
+export async function createColabGist(proxyUrl: string, code: string): Promise<string> {
+  const content = buildNotebookIpynb(code);
+  const res = await fetch(`${proxyUrl.replace(/\/$/, "")}/gist`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      filename: "juscraper_busca.ipynb",
+      content,
+      description: "Busca gerada pela ferramenta juscraper-app (LabDados FGV)",
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok || !data.colabUrl) throw new Error(data.error || "Falha ao gerar o notebook.");
+  return data.colabUrl as string;
+}
+
 export function formatDuration(seconds: number): string {
   if (seconds < 60) return `${Math.round(seconds)} s`;
   const min = Math.floor(seconds / 60);

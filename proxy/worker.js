@@ -107,12 +107,67 @@ function resolveTarget(req, url) {
   return null;
 }
 
-async function handle(request) {
+function jsonResponse(obj, status = 200) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
+  });
+}
+
+/**
+ * Cria um Gist (não listado) com o notebook da busca e devolve a URL do Colab.
+ * Requer o secret GITHUB_GIST_TOKEN (PAT com escopo `gist`).
+ * Body: { filename, content, description? }
+ */
+async function handleGist(request, env) {
+  const token = env && env.GITHUB_GIST_TOKEN;
+  if (!token) {
+    return jsonResponse({ error: "GITHUB_GIST_TOKEN não configurado no Worker." }, 501);
+  }
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return jsonResponse({ error: "JSON inválido." }, 400);
+  }
+  if (!body.filename || !body.content) {
+    return jsonResponse({ error: "filename e content são obrigatórios." }, 400);
+  }
+
+  const gh = await fetch("https://api.github.com/gists", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "juscraper-app",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      description: body.description || "Busca gerada pela ferramenta juscraper-app",
+      public: false, // gist não listado (acessível só por URL)
+      files: { [body.filename]: { content: body.content } },
+    }),
+  });
+  const data = await gh.json();
+  if (!gh.ok) {
+    return jsonResponse({ error: data.message || "Falha ao criar o Gist." }, 502);
+  }
+  const owner = data.owner && data.owner.login;
+  const colabUrl = `https://colab.research.google.com/gist/${owner}/${data.id}/${body.filename}`;
+  return jsonResponse({ colabUrl, gistUrl: data.html_url });
+}
+
+async function handle(request, env) {
   if (request.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
 
   const url = new URL(request.url);
+
+  if (url.pathname === "/gist" && request.method === "POST") {
+    return handleGist(request, env);
+  }
+
   if (url.pathname === "/" && !resolveTarget(request, url)) {
     return new Response(
       "juscraper-app CORS proxy. Use header X-Target-URL ou ?url=<destino>.",

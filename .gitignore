@@ -24,3 +24,4 @@ web/.env.local
 results-*.png
 
 # NOTE: web/public/wheels/ (juscraper wheel vendorizado) É versionado de propósito.
+proxy/.dev.vars

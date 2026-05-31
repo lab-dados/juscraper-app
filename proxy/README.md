@@ -40,11 +40,33 @@ Copie a URL publicada para `web/.env`:
 VITE_PROXY_URL=https://juscraper-proxy.<sua-conta>.workers.dev
 ```
 
+## Geração de notebook no Colab (rota `/gist`)
+
+O botão "Abrir no Colab com esta busca" faz `POST /gist` neste Worker, que cria
+um **Gist não listado** com o notebook da busca e devolve a URL do Colab. Para
+isso o Worker precisa de um token do GitHub com escopo `gist`:
+
+```bash
+# 1. Crie um Personal Access Token (classic) com o escopo "gist"
+#    em https://github.com/settings/tokens (idealmente numa conta bot do LabDados).
+# 2. Configure como secret do Worker e publique:
+cd proxy
+npx wrangler secret put GITHUB_GIST_TOKEN   # cole o token quando pedir
+npx wrangler deploy
+```
+
+Sem o secret, a rota responde 501 e o app cai no notebook genérico do Colab
+(o usuário ainda pode copiar o código da aba Código). Os Gists ficam na conta
+dona do token, são **não listados** (acessíveis só por URL) e contêm o termo
+buscado, então prefira uma conta institucional.
+
 ## Dev local
 
 ```bash
 cd proxy
 npx wrangler dev          # sobe em http://localhost:8787
+# para testar /gist localmente, crie proxy/.dev.vars com:
+#   GITHUB_GIST_TOKEN=ghp_xxx
 ```
 
 ## Segurança

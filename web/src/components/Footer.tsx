@@ -1,6 +1,6 @@
 const LINKS = [
-  { label: "Repositório (GitHub)", href: "https://github.com/jtrecenti/juscraper-app" },
-  { label: "Reportar problema (issues)", href: "https://github.com/jtrecenti/juscraper-app/issues" },
+  { label: "Repositório (GitHub)", href: "https://github.com/lab-dados/juscraper-app" },
+  { label: "Reportar problema (issues)", href: "https://github.com/lab-dados/juscraper-app/issues" },
   { label: "Pacote juscraper", href: "https://github.com/jtrecenti/juscraper" },
   { label: "LabDados FGV", href: "https://labdados-frontend.livelydesert-3e3e3dd8.brazilsouth.azurecontainerapps.io/" },
 ];

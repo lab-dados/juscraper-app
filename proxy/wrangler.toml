@@ -1,0 +1,9 @@
+name = "juscraper-proxy"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+# compatibility_flags garante Headers.getSetCookie() disponivel no runtime.
+compatibility_flags = ["global_fetch_strictly_public"]
+
+# Sem KV/D1/bindings: o proxy e stateless.
+# Deploy:  cd proxy && npx wrangler deploy
+# Dev:     cd proxy && npx wrangler dev

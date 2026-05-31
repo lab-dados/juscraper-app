@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply text-fgv-900;
+  }
+  body {
+    @apply bg-fgv-50 font-sans antialiased;
+  }
+}
+
+@layer components {
+  .label {
+    @apply block text-sm font-medium text-fgv-800 mb-1;
+  }
+  .input {
+    @apply w-full rounded-md border border-fgv-200 bg-white px-3 py-2 text-sm
+      shadow-sm outline-none transition
+      focus:border-accent focus:ring-2 focus:ring-accent/30
+      disabled:cursor-not-allowed disabled:bg-fgv-50;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2
+      text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-accent/40
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-fgv-700 text-white hover:bg-fgv-800;
+  }
+  .btn-secondary {
+    @apply btn border border-fgv-300 bg-white text-fgv-700 hover:bg-fgv-50;
+  }
+  .card {
+    @apply rounded-xl border border-fgv-100 bg-white shadow-sm;
+  }
+}

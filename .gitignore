@@ -1,0 +1,26 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+/wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Node / web
+node_modules/
+web/dist/
+web/.env
+web/.env.local
+*.tsbuildinfo
+
+# Wrangler / Cloudflare
+.wrangler/
+
+# Playwright / scratch
+.playwright-mcp/
+results-*.png
+
+# NOTE: web/public/wheels/ (juscraper wheel vendorizado) É versionado de propósito.

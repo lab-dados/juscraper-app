@@ -1,0 +1,3130 @@
+{
+  "juscraper_version": "0.3.0",
+  "endpoint_labels": {
+    "cjsg": "Jurisprudencia (2o grau)",
+    "cjpg": "Banco de Sentencas (1o grau)"
+  },
+  "courts": [
+    {
+      "sigla": "tjac",
+      "nome": "TJAC",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "comarca",
+              "label": "Comarca (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ementa",
+              "label": "Termo na ementa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_recurso",
+              "label": "Numero do recurso",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "origem",
+              "label": "Origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "T",
+                "R"
+              ],
+              "default": "T"
+            },
+            {
+              "name": "tipo_decisao",
+              "label": "Tipo de decisao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordao",
+                "monocratica"
+              ],
+              "default": "acordao"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "auto_chunk",
+              "label": "Dividir intervalos longos automaticamente",
+              "required": false,
+              "advanced": true,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjal",
+      "nome": "TJAL",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "comarca",
+              "label": "Comarca (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ementa",
+              "label": "Termo na ementa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_recurso",
+              "label": "Numero do recurso",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "origem",
+              "label": "Origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "T",
+                "R"
+              ],
+              "default": "T"
+            },
+            {
+              "name": "tipo_decisao",
+              "label": "Tipo de decisao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordao",
+                "monocratica"
+              ],
+              "default": "acordao"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "auto_chunk",
+              "label": "Dividir intervalos longos automaticamente",
+              "required": false,
+              "advanced": true,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjam",
+      "nome": "TJAM",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "comarca",
+              "label": "Comarca (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ementa",
+              "label": "Termo na ementa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_recurso",
+              "label": "Numero do recurso",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "origem",
+              "label": "Origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "T",
+                "R"
+              ],
+              "default": "T"
+            },
+            {
+              "name": "tipo_decisao",
+              "label": "Tipo de decisao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordao",
+                "monocratica"
+              ],
+              "default": "acordao"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "auto_chunk",
+              "label": "Dividir intervalos longos automaticamente",
+              "required": false,
+              "advanced": true,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjap",
+      "nome": "TJAP",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_acordao",
+              "label": "Numero acordao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_ano",
+              "label": "Numero ano",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_processo",
+              "label": "Numero processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao",
+              "label": "Orgao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "0"
+            },
+            {
+              "name": "origem",
+              "label": "Origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "palavras_exatas",
+              "label": "Palavras exatas",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "secretaria",
+              "label": "Secretaria",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "votacao",
+              "label": "Votacao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "0"
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjba",
+      "nome": "TJBA",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classes",
+              "label": "Classes (IDs internos)",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "items_per_page",
+              "label": "Items per page",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 10
+            },
+            {
+              "name": "numero_recurso",
+              "label": "Numero do recurso",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ordenado_por",
+              "label": "Ordenado por",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "dataPublicacao"
+            },
+            {
+              "name": "orgaos",
+              "label": "Orgaos",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "relatores",
+              "label": "Relatores",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "segundo_grau",
+              "label": "Segundo grau",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "tipo_acordaos",
+              "label": "Tipo acordaos",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "tipo_decisoes_monocraticas",
+              "label": "Tipo decisoes monocraticas",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "turmas_recursais",
+              "label": "Turmas recursais",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjce",
+      "nome": "TJCE",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "comarca",
+              "label": "Comarca (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ementa",
+              "label": "Termo na ementa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_recurso",
+              "label": "Numero do recurso",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "origem",
+              "label": "Origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "T",
+                "R"
+              ],
+              "default": "T"
+            },
+            {
+              "name": "tipo_decisao",
+              "label": "Tipo de decisao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordao",
+                "monocratica"
+              ],
+              "default": "acordao"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "auto_chunk",
+              "label": "Dividir intervalos longos automaticamente",
+              "required": false,
+              "advanced": true,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "experimental",
+        "reason": "Usa TLS customizado (SECLEVEL=1); pode falhar pelo proxy."
+      }
+    },
+    {
+      "sigla": "tjdft",
+      "nome": "TJDFT",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "espelho",
+              "label": "Espelho",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "inteiro_teor",
+              "label": "Inteiro teor",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "quantidade_por_pagina",
+              "label": "Quantidade por pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 10
+            },
+            {
+              "name": "sinonimos",
+              "label": "Sinonimos",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjes",
+      "nome": "TJES",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "busca_exata",
+              "label": "Busca exata",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "core",
+              "label": "Core",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "pje2g",
+                "pje2g_mono",
+                "legado",
+                "turma_recursal_legado"
+              ],
+              "default": "pje2g"
+            },
+            {
+              "name": "jurisdicao",
+              "label": "Jurisdicao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ordenacao",
+              "label": "Ordenacao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "per_page",
+              "label": "Per page",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 20
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        },
+        "cjpg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "busca_exata",
+              "label": "Busca exata",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "jurisdicao",
+              "label": "Jurisdicao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ordenacao",
+              "label": "Ordenacao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "per_page",
+              "label": "Per page",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 20
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjgo",
+      "nome": "TJGO",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "id_area",
+              "label": "Id area",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                0,
+                1,
+                2,
+                "0",
+                "1",
+                "2"
+              ],
+              "default": 0
+            },
+            {
+              "name": "id_instancia",
+              "label": "Id instancia",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                0,
+                1,
+                2,
+                3,
+                "0",
+                "1",
+                "2",
+                "3"
+              ],
+              "default": 0
+            },
+            {
+              "name": "id_serventia_subtipo",
+              "label": "Id serventia subtipo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 0
+            },
+            {
+              "name": "numero_processo",
+              "label": "Numero processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "qtde_itens_pagina",
+              "label": "Qtde itens pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 10
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjmg",
+      "nome": "TJMG",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "linhas_por_pagina",
+              "label": "Linhas por pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                10,
+                20,
+                50
+              ],
+              "default": 10
+            },
+            {
+              "name": "order_by",
+              "label": "Order by",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                0,
+                1,
+                2,
+                "0",
+                "1",
+                "2"
+              ],
+              "default": 2
+            },
+            {
+              "name": "pesquisar_por",
+              "label": "Pesquisar por",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "ementa",
+                "acordao"
+              ],
+              "default": "ementa"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "unsupported",
+        "reason": "Exige resolver captcha de imagem (txtcaptcha); fora do v1."
+      }
+    },
+    {
+      "sigla": "tjms",
+      "nome": "TJMS",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "comarca",
+              "label": "Comarca (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ementa",
+              "label": "Termo na ementa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_recurso",
+              "label": "Numero do recurso",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "origem",
+              "label": "Origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "T",
+                "R"
+              ],
+              "default": "T"
+            },
+            {
+              "name": "tipo_decisao",
+              "label": "Tipo de decisao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordao",
+                "monocratica"
+              ],
+              "default": "acordao"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "auto_chunk",
+              "label": "Dividir intervalos longos automaticamente",
+              "required": false,
+              "advanced": true,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjmt",
+      "nome": "TJMT",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "quantidade_por_pagina",
+              "label": "Quantidade por pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 10
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "thesaurus",
+              "label": "Thesaurus",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "tipo_consulta",
+              "label": "Tipo consulta",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "Acordao"
+            },
+            {
+              "name": "tipo_processo",
+              "label": "Tipo processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjpa",
+      "nome": "TJPA",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador_colegiado",
+              "label": "Orgao julgador colegiado",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "origem",
+              "label": "Origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "query_scope",
+              "label": "Query scope",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "ementa"
+            },
+            {
+              "name": "query_type",
+              "label": "Query type",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "free"
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "sort_by",
+              "label": "Sort by",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "datajulgamento"
+            },
+            {
+              "name": "sort_order",
+              "label": "Sort order",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            {
+              "name": "tipo",
+              "label": "Tipo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjpb",
+      "nome": "TJPB",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "decisoes",
+              "label": "Decisoes",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "id_classe",
+              "label": "Id classe",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "id_orgao_julgador",
+              "label": "Id orgao julgador",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "id_origem",
+              "label": "Id origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "8,2"
+            },
+            {
+              "name": "id_relator",
+              "label": "Id relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_processo",
+              "label": "Numero processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjpe",
+      "nome": "TJPE",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "meio_tramitacao",
+              "label": "Meio tramitacao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "tipo_decisao",
+              "label": "Tipo de decisao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordaos",
+                "monocraticas",
+                "todos"
+              ],
+              "default": "acordaos"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjpi",
+      "nome": "TJPI",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao",
+              "label": "Orgao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "tipo",
+              "label": "Tipo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjpr",
+      "nome": "TJPR",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjrj",
+      "nome": "TJRJ",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "competencia",
+              "label": "Competencia",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "1"
+            },
+            {
+              "name": "magistrado_codigo",
+              "label": "Magistrado codigo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_codigo",
+              "label": "Orgao codigo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "origem",
+              "label": "Origem",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": "1"
+            },
+            {
+              "name": "tipo_acordao",
+              "label": "Tipo acordao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "tipo_monocratica",
+              "label": "Tipo monocratica",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "ano_fim",
+              "label": "Ano fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "ano_inicio",
+              "label": "Ano inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjrn",
+      "nome": "TJRN",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "decisoes",
+              "label": "Decisoes",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "grau",
+              "label": "Grau",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "id_classe",
+              "label": "Id classe",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "id_colegiado",
+              "label": "Id colegiado",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "id_orgao_julgador",
+              "label": "Id orgao julgador",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "id_relator",
+              "label": "Id relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "jurisdicoes",
+              "label": "Jurisdicoes",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_processo",
+              "label": "Numero processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "sistema",
+              "label": "Sistema",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjro",
+      "nome": "TJRO",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "instancia",
+              "label": "Instancia",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_processo",
+              "label": "Numero processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador_colegiado",
+              "label": "Orgao julgador colegiado",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "termo_exato",
+              "label": "Termo exato",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "tipo",
+              "label": "Tipo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjrr",
+      "nome": "TJRR",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "especie",
+              "label": "Especie",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjrs",
+      "nome": "TJRS",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "relator",
+              "label": "Relator",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "secao",
+              "label": "Secao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "tipo_processo",
+              "label": "Tipo processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjsc",
+      "nome": "TJSC",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "campo",
+              "label": "Campo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "E",
+                "I"
+              ],
+              "default": "E"
+            },
+            {
+              "name": "processo",
+              "label": "Processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjsp",
+      "nome": "TJSP",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "baixar_sg",
+              "label": "Buscar em segundo grau",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            },
+            {
+              "name": "classe",
+              "label": "Classe (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "comarca",
+              "label": "Comarca (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ementa",
+              "label": "Termo na ementa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "orgao_julgador",
+              "label": "Orgao julgador (ID interno)",
+              "required": false,
+              "advanced": false,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "tipo_decisao",
+              "label": "Tipo de decisao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordao",
+                "monocratica"
+              ],
+              "default": "acordao"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "auto_chunk",
+              "label": "Dividir intervalos longos automaticamente",
+              "required": false,
+              "advanced": true,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            }
+          ]
+        },
+        "cjpg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "assuntos",
+              "label": "Assuntos (IDs internos)",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "classes",
+              "label": "Classes (IDs internos)",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "id_processo",
+              "label": "Numero do processo (CNJ)",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "varas",
+              "label": "Varas (IDs internos)",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "auto_chunk",
+              "label": "Dividir intervalos longos automaticamente",
+              "required": false,
+              "advanced": true,
+              "help": null,
+              "type": "checkbox",
+              "default": true
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    },
+    {
+      "sigla": "tjto",
+      "nome": "TJTO",
+      "endpoints": {
+        "cjsg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_processo",
+              "label": "Numero processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ordenacao",
+              "label": "Ordenacao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "ASC",
+                "DESC",
+                "RELEV"
+              ],
+              "default": "DESC"
+            },
+            {
+              "name": "soementa",
+              "label": "Soementa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "tipo_documento",
+              "label": "Tipo documento",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordaos",
+                "decisoes",
+                "sentencas"
+              ],
+              "default": "acordaos"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        },
+        "cjpg": {
+          "fields": [
+            {
+              "name": "pesquisa",
+              "label": "Termo de pesquisa",
+              "required": true,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "numero_processo",
+              "label": "Numero processo",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": ""
+            },
+            {
+              "name": "ordenacao",
+              "label": "Ordenacao",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "ASC",
+                "DESC",
+                "RELEV"
+              ],
+              "default": "DESC"
+            },
+            {
+              "name": "soementa",
+              "label": "Soementa",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "checkbox",
+              "default": false
+            },
+            {
+              "name": "tipo_documento",
+              "label": "Tipo documento",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "select",
+              "options": [
+                "acordaos",
+                "decisoes",
+                "sentencas"
+              ],
+              "default": "acordaos"
+            },
+            {
+              "name": "data_julgamento_fim",
+              "label": "Julgamento - fim",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            },
+            {
+              "name": "data_julgamento_inicio",
+              "label": "Julgamento - inicio",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "date",
+              "format": "DD/MM/AAAA",
+              "default": ""
+            }
+          ]
+        }
+      },
+      "support": {
+        "status": "supported",
+        "reason": ""
+      }
+    }
+  ]
+}

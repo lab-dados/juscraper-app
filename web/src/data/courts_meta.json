@@ -25,27 +25,36 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do assunto.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "classe",
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da classe processual.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "comarca",
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da comarca.",
+              "help": "ID interno da comarca. Backend: cdComarca (single-value, nao aceita lista).",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "count_only",
+              "label": "Count only",
+              "required": false,
+              "advanced": false,
+              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
+              "type": "checkbox",
+              "default": false
             },
             {
               "name": "ementa",
@@ -70,9 +79,9 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do orgao julgador.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "origem",
@@ -177,27 +186,36 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do assunto.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "classe",
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da classe processual.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "comarca",
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da comarca.",
+              "help": "ID interno da comarca. Backend: cdComarca (single-value, nao aceita lista).",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "count_only",
+              "label": "Count only",
+              "required": false,
+              "advanced": false,
+              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
+              "type": "checkbox",
+              "default": false
             },
             {
               "name": "ementa",
@@ -222,9 +240,9 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do orgao julgador.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "origem",
@@ -329,27 +347,36 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do assunto.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "classe",
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da classe processual.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "comarca",
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da comarca.",
+              "help": "ID interno da comarca. Backend: cdComarca (single-value, nao aceita lista).",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "count_only",
+              "label": "Count only",
+              "required": false,
+              "advanced": false,
+              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
+              "type": "checkbox",
+              "default": false
             },
             {
               "name": "ementa",
@@ -374,9 +401,9 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do orgao julgador.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "origem",
@@ -590,22 +617,13 @@
               "default": ""
             },
             {
-              "name": "classes",
-              "label": "Classes (IDs internos)",
+              "name": "classe",
+              "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
               "type": "text",
               "default": ""
-            },
-            {
-              "name": "items_per_page",
-              "label": "Items per page",
-              "required": false,
-              "advanced": false,
-              "help": null,
-              "type": "text",
-              "default": 10
             },
             {
               "name": "numero_recurso",
@@ -651,6 +669,15 @@
               "help": null,
               "type": "checkbox",
               "default": true
+            },
+            {
+              "name": "tamanho_pagina",
+              "label": "Tamanho pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 10
             },
             {
               "name": "tipo_acordaos",
@@ -727,27 +754,36 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do assunto.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "classe",
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da classe processual.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "comarca",
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da comarca.",
+              "help": "ID interno da comarca. Backend: cdComarca (single-value, nao aceita lista).",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "count_only",
+              "label": "Count only",
+              "required": false,
+              "advanced": false,
+              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
+              "type": "checkbox",
+              "default": false
             },
             {
               "name": "ementa",
@@ -772,9 +808,9 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do orgao julgador.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "origem",
@@ -893,15 +929,6 @@
               "default": false
             },
             {
-              "name": "quantidade_por_pagina",
-              "label": "Quantidade por pagina",
-              "required": false,
-              "advanced": false,
-              "help": null,
-              "type": "text",
-              "default": 10
-            },
-            {
               "name": "sinonimos",
               "label": "Sinonimos",
               "required": false,
@@ -909,6 +936,15 @@
               "help": null,
               "type": "checkbox",
               "default": true
+            },
+            {
+              "name": "tamanho_pagina",
+              "label": "Tamanho pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 10
             },
             {
               "name": "data_julgamento_fim",
@@ -1043,15 +1079,6 @@
               "default": ""
             },
             {
-              "name": "per_page",
-              "label": "Per page",
-              "required": false,
-              "advanced": false,
-              "help": null,
-              "type": "text",
-              "default": 20
-            },
-            {
               "name": "relator",
               "label": "Relator",
               "required": false,
@@ -1059,6 +1086,15 @@
               "help": null,
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "tamanho_pagina",
+              "label": "Tamanho pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 20
             },
             {
               "name": "data_julgamento_fim",
@@ -1148,15 +1184,6 @@
               "default": ""
             },
             {
-              "name": "per_page",
-              "label": "Per page",
-              "required": false,
-              "advanced": false,
-              "help": null,
-              "type": "text",
-              "default": 20
-            },
-            {
               "name": "relator",
               "label": "Relator",
               "required": false,
@@ -1164,6 +1191,15 @@
               "help": null,
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "tamanho_pagina",
+              "label": "Tamanho pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 20
             },
             {
               "name": "data_julgamento_fim",
@@ -1263,8 +1299,8 @@
               "default": ""
             },
             {
-              "name": "qtde_itens_pagina",
-              "label": "Qtde itens pagina",
+              "name": "tamanho_pagina",
+              "label": "Tamanho pagina",
               "required": false,
               "advanced": false,
               "help": "Itens por pagina (default 10).",
@@ -1315,20 +1351,6 @@
               "default": ""
             },
             {
-              "name": "linhas_por_pagina",
-              "label": "Linhas por pagina",
-              "required": false,
-              "advanced": false,
-              "help": "Resultados por pagina (10, 20 ou 50).",
-              "type": "select",
-              "options": [
-                10,
-                20,
-                50
-              ],
-              "default": 10
-            },
-            {
               "name": "order_by",
               "label": "Order by",
               "required": false,
@@ -1357,6 +1379,20 @@
                 "acordao"
               ],
               "default": "ementa"
+            },
+            {
+              "name": "tamanho_pagina",
+              "label": "Tamanho pagina",
+              "required": false,
+              "advanced": false,
+              "help": "Resultados por pagina (10, 20 ou 50).",
+              "type": "select",
+              "options": [
+                10,
+                20,
+                50
+              ],
+              "default": 10
             },
             {
               "name": "data_julgamento_fim",
@@ -1426,27 +1462,36 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do assunto.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "classe",
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da classe processual.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "comarca",
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno da comarca.",
+              "help": "ID interno da comarca. Backend: cdComarca (single-value, nao aceita lista).",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "count_only",
+              "label": "Count only",
+              "required": false,
+              "advanced": false,
+              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
+              "type": "checkbox",
+              "default": false
             },
             {
               "name": "ementa",
@@ -1471,9 +1516,9 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "ID interno do orgao julgador.",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "origem",
@@ -1592,15 +1637,6 @@
               "default": ""
             },
             {
-              "name": "quantidade_por_pagina",
-              "label": "Quantidade por pagina",
-              "required": false,
-              "advanced": false,
-              "help": null,
-              "type": "text",
-              "default": 10
-            },
-            {
               "name": "relator",
               "label": "Relator",
               "required": false,
@@ -1608,6 +1644,15 @@
               "help": null,
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "tamanho_pagina",
+              "label": "Tamanho pagina",
+              "required": false,
+              "advanced": false,
+              "help": null,
+              "type": "text",
+              "default": 10
             },
             {
               "name": "thesaurus",
@@ -1929,7 +1974,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre (ementa). Aceita os aliases deprecados query / termo.",
               "type": "text",
               "default": ""
             },
@@ -1938,7 +1983,7 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Codigo CNJ do assunto. Aceita o alias deprecado assunto_cnj.",
               "type": "text",
               "default": ""
             },
@@ -1947,7 +1992,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Codigo CNJ da classe. Aceita o alias deprecado classe_cnj.",
               "type": "text",
               "default": ""
             },
@@ -1956,7 +2001,7 @@
               "label": "Meio tramitacao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Filtro de meio de tramitacao (ex.: \"ELETRONICO\").",
               "type": "text",
               "default": ""
             },
@@ -1965,7 +2010,7 @@
               "label": "Relator",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Nome do relator (deve bater exatamente com o valor do dropdown do formulario).",
               "type": "text",
               "default": ""
             },
@@ -1974,7 +2019,7 @@
               "label": "Tipo de decisao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"acordaos\" (default), \"monocraticas\" ou \"todos\". Quando \"todos\", o backend marca os dois checkboxes e o fluxo passa pela pagina de escolha (escolhaResultado.xhtml).",
               "type": "select",
               "options": [
                 "acordaos",
@@ -1988,7 +2033,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Data final de julgamento (mesmos formatos de data_julgamento_inicio).",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -1998,7 +2043,7 @@
               "label": "Julgamento - inicio",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Data inicial de julgamento (DD/MM/AAAA, DD-MM-AAAA, AAAA-MM-DD, AAAA/MM/DD, datetime.date ou datetime.datetime).",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2527,7 +2572,7 @@
               "label": "Relator",
               "required": false,
               "advanced": false,
-              "help": "Nome do relator. **Aceito por compat de API**, mas hoje o backend nao expoe campo de texto livre para relator (virou multi-select de IDs); o filtro e descartado pelo Projudi/PrimeFaces. Refs #158 (deprecation/remocao planejada).",
+              "help": "Lista de nomes regimentais de",
               "type": "text",
               "default": ""
             },
@@ -2772,7 +2817,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": "Termo livre buscado no acordao/ementa. Limite de 120 caracteres (raises QueryTooLongError).",
+              "help": "Termo livre buscado no acordao/ementa. Default \"\" (sem termo, busca aberta por filtros). Limite de 120 caracteres (raises QueryTooLongError).",
               "type": "text",
               "default": ""
             },
@@ -2782,8 +2827,8 @@
               "required": false,
               "advanced": false,
               "help": "ID interno do assunto.",
-              "type": "text",
-              "default": ""
+              "type": "list",
+              "default": []
             },
             {
               "name": "baixar_sg",
@@ -2800,8 +2845,8 @@
               "required": false,
               "advanced": false,
               "help": "ID interno da classe processual.",
-              "type": "text",
-              "default": ""
+              "type": "list",
+              "default": []
             },
             {
               "name": "comarca",
@@ -2811,6 +2856,15 @@
               "help": "ID interno da comarca.",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "count_only",
+              "label": "Count only",
+              "required": false,
+              "advanced": false,
+              "help": "Default False. Se True, faz so a chamada inicial e retorna int com o total de resultados em vez de pd.DataFrame. Util pra estimar wall-clock antes de coleta longa (issue #92). Soma bruta cross-janela em auto_chunk=True.",
+              "type": "checkbox",
+              "default": false
             },
             {
               "name": "ementa",
@@ -2827,8 +2881,8 @@
               "required": false,
               "advanced": false,
               "help": "ID interno do orgao julgador.",
-              "type": "text",
-              "default": ""
+              "type": "list",
+              "default": []
             },
             {
               "name": "tipo_decisao",
@@ -2886,22 +2940,31 @@
               "default": ""
             },
             {
-              "name": "assuntos",
-              "label": "Assuntos (IDs internos)",
+              "name": "assunto",
+              "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "IDs internos de assunto. Backend: assuntoTreeSelection.values (CSV).",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) internos de assunto. Backend: assuntoTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
-              "name": "classes",
-              "label": "Classes (IDs internos)",
+              "name": "classe",
+              "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "IDs internos de classe processual. Backend: classeTreeSelection.values (CSV).",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) internos de classe processual. Backend: classeTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
+            },
+            {
+              "name": "count_only",
+              "label": "Count only",
+              "required": false,
+              "advanced": false,
+              "help": "Default False. Se True, faz so o GET inicial, extrai o total de resultados via cjpg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - soma bruta (sem dedup por id_processo). paginas e ignorado (emite UserWarning).",
+              "type": "checkbox",
+              "default": false
             },
             {
               "name": "id_processo",
@@ -2913,13 +2976,13 @@
               "default": ""
             },
             {
-              "name": "varas",
-              "label": "Varas (IDs internos)",
+              "name": "vara",
+              "label": "Vara",
               "required": false,
               "advanced": false,
-              "help": "IDs internos de vara, no formato em arvore do TJSP (ex.: \"1-1-1\"). Backend: varasTreeSelection.values (CSV).",
-              "type": "text",
-              "default": ""
+              "help": "ID(s) internos de vara, no formato em arvore do TJSP (ex.: \"1-1-1\"). Backend: varasTreeSelection.values (CSV).",
+              "type": "list",
+              "default": []
             },
             {
               "name": "data_julgamento_fim",

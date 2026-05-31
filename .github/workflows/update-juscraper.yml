@@ -1,0 +1,79 @@
+name: Atualizar juscraper (diário)
+
+# Rebuilda o wheel do juscraper a partir do GitHub main, regenera os metadados
+# dos tribunais e, se algo mudou, commita e dispara o deploy do Pages.
+#
+# Guarda de segurança: se o build do wheel OU a geração de metadados falhar, o
+# job falha e NADA é commitado/publicado, então a versão anterior continua no ar.
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # 06:00 UTC = 03:00 no horário de Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write # para disparar o deploy.yml via workflow_dispatch
+
+env:
+  # Fonte do juscraper: branch main do repositório oficial.
+  JUSCRAPER_REPO: jtrecenti/juscraper
+  JUSCRAPER_REF: main
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Atualizar juscraper e regenerar metadados
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # 1. SHA atual do main; só prossegue se mudou desde o ultimo manifest.
+          SHA=$(gh api "repos/${JUSCRAPER_REPO}/commits/${JUSCRAPER_REF}" -q .sha)
+          REV=${SHA:0:12}
+          CURRENT=$(jq -r '.rev // ""' web/public/wheels/manifest.json 2>/dev/null || echo "")
+          echo "main=$REV | atual=$CURRENT"
+          if [ "$REV" = "$CURRENT" ]; then
+            echo "Sem mudança no juscraper. Encerrando."
+            exit 0
+          fi
+
+          # 2. Builda o wheel a partir do GitHub main.
+          python -m pip install --upgrade pip build
+          rm -f web/public/wheels/*.whl
+          pip wheel "git+https://github.com/${JUSCRAPER_REPO}@${JUSCRAPER_REF}" \
+            --no-deps -w web/public/wheels/
+          WHEEL=$(basename web/public/wheels/juscraper-*.whl)
+          VERSION=$(echo "$WHEEL" | sed -E 's/^juscraper-(.+)-py3-none-any\.whl$/\1/')
+          echo "wheel=$WHEEL versao=$VERSION"
+
+          # 3. Instala o wheel (com deps) e regenera os metadados dos tribunais.
+          #    Se o juscraper mudou de forma incompatível, isto falha e aborta tudo.
+          pip install "web/public/wheels/${WHEEL}"
+          python scripts/gen_courts_meta.py
+
+          # 4. Atualiza o manifest que o app lê em runtime.
+          jq -n --arg w "$WHEEL" --arg v "$VERSION" --arg r "$REV" \
+            '{wheel: $w, version: $v, rev: $r}' > web/public/wheels/manifest.json
+
+          # 5. Commita e dispara o deploy (push via GITHUB_TOKEN não dispara
+          #    o deploy.yml sozinho, por isso o workflow run explícito).
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/public/wheels web/src/data/courts_meta.json
+          if git diff --cached --quiet; then
+            echo "Nada para commitar (conteúdo idêntico)."
+            exit 0
+          fi
+          git commit -m "chore: atualiza juscraper para ${VERSION} (${REV})"
+          git push
+          gh workflow run deploy.yml
+          echo "Atualizado para ${VERSION} (${REV}) e deploy disparado."

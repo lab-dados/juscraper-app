@@ -66,12 +66,26 @@ npm install
 npm run dev                 # http://localhost:5173
 ```
 
-### Regenerar metadados (após atualizar o juscraper)
+### Atualização do juscraper
+
+O app instala um **wheel vendorizado** em `web/public/wheels/`, e descobre qual
+carregar em runtime via `web/public/wheels/manifest.json` (`{wheel, version, rev}`).
+Nada de versão fica hardcoded no código.
+
+Isso é atualizado automaticamente pela Action
+[`update-juscraper.yml`](.github/workflows/update-juscraper.yml), que roda todo
+dia às 03:00 (Brasília): rebuilda o wheel a partir do `main` do
+[juscraper](https://github.com/jtrecenti/juscraper), regenera o `courts_meta.json`
+e, se algo mudou (comparando a SHA do commit), commita e dispara o deploy. Se o
+build do wheel ou a geração de metadados falhar, o job aborta e a versão anterior
+continua no ar.
+
+Para atualizar **manualmente** (ou regenerar os metadados localmente):
 ```bash
-.venv/Scripts/python.exe scripts/gen_courts_meta.py
+.venv/Scripts/python.exe scripts/gen_courts_meta.py   # regenera courts_meta.json
+# e, se trocar o wheel, atualize web/public/wheels/ + manifest.json
 ```
-Para atualizar o wheel vendorizado, baixe a nova versão para
-`web/public/wheels/` e ajuste o nome em `web/src/App.tsx` (`WHEEL_URL`).
+Ou dispare a Action na mão: **Actions > Atualizar juscraper (diário) > Run workflow**.
 
 ## Deploy
 

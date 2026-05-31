@@ -15,11 +15,9 @@ import { buildCode } from "./lib/utils";
 
 const meta = courtsMetaRaw as CourtsMeta;
 const PROXY_URL = (import.meta.env.VITE_PROXY_URL as string | undefined) ?? "";
-// Wheel vendorizado em public/wheels — resolvido para URL absoluta da origem do app.
-const WHEEL_URL = new URL(
-  `${import.meta.env.BASE_URL}wheels/juscraper-0.3.0-py3-none-any.whl`,
-  window.location.href
-).href;
+// Pasta dos wheels vendorizados; o worker le o manifest.json para descobrir a
+// versao corrente (atualizada pela Action diaria que rebuilda o juscraper).
+const WHEELS_BASE_URL = new URL(`${import.meta.env.BASE_URL}wheels/`, window.location.href).href;
 
 type Phase = "form" | "counting" | "estimate" | "running" | "done";
 type BootState = "loading" | "ready" | "error";
@@ -50,7 +48,7 @@ export default function App() {
 
   // Inicializa o Pyodide uma vez.
   useEffect(() => {
-    const client = new JuscraperClient(PROXY_URL, WHEEL_URL);
+    const client = new JuscraperClient(PROXY_URL, WHEELS_BASE_URL);
     clientRef.current = client;
     client
       .bootstrap()

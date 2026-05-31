@@ -11,7 +11,7 @@ const PYODIDE_VERSION = "0.27.2";
 const PYODIDE_INDEX = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
 
 type InMsg =
-  | { type: "bootstrap"; id: number; proxyUrl: string; wheelUrl: string }
+  | { type: "bootstrap"; id: number; proxyUrl: string; wheelsBaseUrl: string }
   | { type: "count"; id: number; sigla: string; endpoint: string; params: Record<string, unknown> }
   | {
       type: "run";
@@ -39,15 +39,22 @@ async function loadPyodideRuntime(): Promise<PyodideAPI> {
   return mod.loadPyodide({ indexURL: PYODIDE_INDEX });
 }
 
-async function bootstrap(proxyUrl: string, wheelUrl: string): Promise<string> {
+async function bootstrap(proxyUrl: string, wheelsBaseUrl: string): Promise<string> {
   if (!booting) {
     booting = (async () => {
       pyodide = await loadPyodideRuntime();
       await pyodide.loadPackage("micropip");
-      // Baixa o wheel em JS (micropip 0.27.2 falha ao baixar wheels por URL) e
+      // O manifest aponta qual wheel carregar (atualizado pela Action diária).
+      // no-cache para sempre pegar a versão corrente apos um redeploy.
+      const manifest = await (
+        await fetch(`${wheelsBaseUrl}manifest.json`, { cache: "no-cache" })
+      ).json();
+      // ?v=<rev> invalida o cache do wheel quando o conteúdo muda mas o nome não.
+      const wheelUrl = `${wheelsBaseUrl}${manifest.wheel}?v=${encodeURIComponent(manifest.rev)}`;
+      // Baixa o wheel em JS (micropip 0.27.x falha ao baixar wheels por URL) e
       // grava no FS do Pyodide; o glue instala via esquema emfs:.
       const wheelBytes = new Uint8Array(await (await fetch(wheelUrl)).arrayBuffer());
-      const wheelPath = "/tmp/juscraper-0.3.0-py3-none-any.whl";
+      const wheelPath = `/tmp/${manifest.wheel}`;
       pyodide.FS.writeFile(wheelPath, wheelBytes);
       await pyodide.runPythonAsync(glueSource);
       const boot = pyodide.globals.get("bootstrap");
@@ -66,7 +73,7 @@ self.onmessage = async (ev: MessageEvent<InMsg>) => {
   const msg = ev.data;
   try {
     if (msg.type === "bootstrap") {
-      const version = await bootstrap(msg.proxyUrl, msg.wheelUrl);
+      const version = await bootstrap(msg.proxyUrl, msg.wheelsBaseUrl);
       post({ type: "result", id: msg.id, payload: { version } });
       return;
     }

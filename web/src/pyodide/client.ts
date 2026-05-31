@@ -13,7 +13,7 @@ export class JuscraperClient {
 
   constructor(
     private proxyUrl: string,
-    private wheelUrl: string
+    private wheelsBaseUrl: string
   ) {
     this.worker = new PyWorker();
     this.worker.onmessage = (ev: MessageEvent) => this.handle(ev.data);
@@ -51,7 +51,7 @@ export class JuscraperClient {
       this.ready = this.send<{ version: string }>({
         type: "bootstrap",
         proxyUrl: this.proxyUrl,
-        wheelUrl: this.wheelUrl,
+        wheelsBaseUrl: this.wheelsBaseUrl,
       });
     }
     return this.ready;

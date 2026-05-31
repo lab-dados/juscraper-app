@@ -176,6 +176,7 @@ def _install_proxy_adapter():
 _DEPS = [
     "pandas", "beautifulsoup4", "lxml", "requests", "pydantic",
     "tqdm", "Unidecode", "pyjwt", "python-dotenv", "nest-asyncio",
+    "openpyxl",  # exportacao XLSX
 ]
 
 
@@ -254,6 +255,29 @@ def _clean_params(params: dict) -> dict:
 def _to_scraper(sigla: str):
     import juscraper as jus
     return jus.scraper(sigla)
+
+
+import base64
+import re as _re
+
+# Caracteres de controle invalidos no XML do XLSX.
+_ILLEGAL_XLSX = _re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
+
+
+def _df_to_xlsx_b64(df) -> str:
+    """Serializa o DataFrame em XLSX (base64), sanitizando celulas de texto."""
+    import pandas as pd
+
+    safe = df.copy()
+    for col in safe.columns:
+        if safe[col].dtype == object:
+            safe[col] = safe[col].map(
+                lambda v: _ILLEGAL_XLSX.sub("", v)[:32000] if isinstance(v, str) else v
+            )
+    buf = io.BytesIO()
+    with pd.ExcelWriter(buf, engine="openpyxl") as writer:
+        safe.to_excel(writer, index=False, sheet_name="resultados")
+    return base64.b64encode(buf.getvalue()).decode("ascii")
 
 
 # --------------------------------------------------------------------------
@@ -350,11 +374,13 @@ def run(sigla: str, endpoint: str, params, paginas, progress) -> str:
         records = json.loads(df.to_json(orient="records", date_format="iso", force_ascii=False))
         csv_buf = io.StringIO()
         df.to_csv(csv_buf, index=False)
+        xlsx_b64 = _df_to_xlsx_b64(df)
         return json.dumps({
             "ok": True,
             "columns": [str(c) for c in df.columns],
             "records": records,
             "csv": csv_buf.getvalue(),
+            "xlsx_b64": xlsx_b64,
             "n_rows": int(len(df)),
         })
     except BaseException as exc:  # noqa: BLE001

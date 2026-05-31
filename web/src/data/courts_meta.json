@@ -16,7 +16,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo livre buscado no acordao/ementa.",
               "type": "text",
               "default": ""
             },
@@ -25,7 +25,7 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do assunto.",
               "type": "text",
               "default": ""
             },
@@ -34,7 +34,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da classe processual.",
               "type": "text",
               "default": ""
             },
@@ -43,7 +43,7 @@
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da comarca.",
               "type": "text",
               "default": ""
             },
@@ -52,7 +52,7 @@
               "label": "Termo na ementa",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Termo buscado especificamente na ementa.",
               "type": "text",
               "default": ""
             },
@@ -61,7 +61,7 @@
               "label": "Numero do recurso",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero do recurso.",
               "type": "text",
               "default": ""
             },
@@ -70,7 +70,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -79,7 +79,7 @@
               "label": "Origem",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"T\" (segundo grau, default) ou \"R\" (colegio recursal).",
               "type": "select",
               "options": [
                 "T",
@@ -92,7 +92,7 @@
               "label": "Tipo de decisao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Default \"acordao\".",
               "type": "select",
               "options": [
                 "acordao",
@@ -105,7 +105,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -125,7 +125,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de publicacao.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -145,7 +145,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": null,
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -168,7 +168,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo livre buscado no acordao/ementa.",
               "type": "text",
               "default": ""
             },
@@ -177,7 +177,7 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do assunto.",
               "type": "text",
               "default": ""
             },
@@ -186,7 +186,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da classe processual.",
               "type": "text",
               "default": ""
             },
@@ -195,7 +195,7 @@
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da comarca.",
               "type": "text",
               "default": ""
             },
@@ -204,7 +204,7 @@
               "label": "Termo na ementa",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Termo buscado especificamente na ementa.",
               "type": "text",
               "default": ""
             },
@@ -213,7 +213,7 @@
               "label": "Numero do recurso",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero do recurso.",
               "type": "text",
               "default": ""
             },
@@ -222,7 +222,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -231,7 +231,7 @@
               "label": "Origem",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"T\" (segundo grau, default) ou \"R\" (colegio recursal).",
               "type": "select",
               "options": [
                 "T",
@@ -244,7 +244,7 @@
               "label": "Tipo de decisao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Default \"acordao\".",
               "type": "select",
               "options": [
                 "acordao",
@@ -257,7 +257,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -277,7 +277,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de publicacao.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -297,7 +297,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": null,
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -320,7 +320,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo livre buscado no acordao/ementa.",
               "type": "text",
               "default": ""
             },
@@ -329,7 +329,7 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do assunto.",
               "type": "text",
               "default": ""
             },
@@ -338,7 +338,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da classe processual.",
               "type": "text",
               "default": ""
             },
@@ -347,7 +347,7 @@
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da comarca.",
               "type": "text",
               "default": ""
             },
@@ -356,7 +356,7 @@
               "label": "Termo na ementa",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Termo buscado especificamente na ementa.",
               "type": "text",
               "default": ""
             },
@@ -365,7 +365,7 @@
               "label": "Numero do recurso",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero do recurso.",
               "type": "text",
               "default": ""
             },
@@ -374,7 +374,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -383,7 +383,7 @@
               "label": "Origem",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"T\" (segundo grau, default) ou \"R\" (colegio recursal).",
               "type": "select",
               "options": [
                 "T",
@@ -396,7 +396,7 @@
               "label": "Tipo de decisao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Default \"acordao\".",
               "type": "select",
               "options": [
                 "acordao",
@@ -409,7 +409,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -429,7 +429,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de publicacao.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -449,7 +449,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": null,
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -718,7 +718,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo livre buscado no acordao/ementa.",
               "type": "text",
               "default": ""
             },
@@ -727,7 +727,7 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do assunto.",
               "type": "text",
               "default": ""
             },
@@ -736,7 +736,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da classe processual.",
               "type": "text",
               "default": ""
             },
@@ -745,7 +745,7 @@
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da comarca.",
               "type": "text",
               "default": ""
             },
@@ -754,7 +754,7 @@
               "label": "Termo na ementa",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Termo buscado especificamente na ementa.",
               "type": "text",
               "default": ""
             },
@@ -763,7 +763,7 @@
               "label": "Numero do recurso",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero do recurso.",
               "type": "text",
               "default": ""
             },
@@ -772,7 +772,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -781,7 +781,7 @@
               "label": "Origem",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"T\" (segundo grau, default) ou \"R\" (colegio recursal).",
               "type": "select",
               "options": [
                 "T",
@@ -794,7 +794,7 @@
               "label": "Tipo de decisao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Default \"acordao\".",
               "type": "select",
               "options": [
                 "acordao",
@@ -807,7 +807,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -827,7 +827,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de publicacao.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -847,7 +847,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": null,
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -1204,7 +1204,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
             },
@@ -1213,7 +1213,7 @@
               "label": "Id area",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "0 todas / 1 civel / 2 criminal.",
               "type": "select",
               "options": [
                 0,
@@ -1230,7 +1230,7 @@
               "label": "Id instancia",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "0 todas / 1 1o grau / 2 recursal / 3 tribunal.",
               "type": "select",
               "options": [
                 0,
@@ -1249,7 +1249,7 @@
               "label": "Id serventia subtipo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID do subtipo de serventia (dropdown do site). 0 = todas.",
               "type": "text",
               "default": 0
             },
@@ -1258,7 +1258,7 @@
               "label": "Numero processo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Filtrar por numero CNJ especifico.",
               "type": "text",
               "default": ""
             },
@@ -1267,7 +1267,7 @@
               "label": "Qtde itens pagina",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Itens por pagina (default 10).",
               "type": "text",
               "default": 10
             },
@@ -1276,7 +1276,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "DD/MM/AAAA ou AAAA-MM-DD. Backend Projudi mapeia para DataInicial / DataFinal no form body.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -1310,7 +1310,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
             },
@@ -1319,7 +1319,7 @@
               "label": "Linhas por pagina",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Resultados por pagina (10, 20 ou 50).",
               "type": "select",
               "options": [
                 10,
@@ -1333,7 +1333,7 @@
               "label": "Order by",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Ordenacao: 2 data julgamento, 1 data publicacao, 0 precisao. Default 2.",
               "type": "select",
               "options": [
                 0,
@@ -1350,7 +1350,7 @@
               "label": "Pesquisar por",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Campo onde buscar. \"acordao\" busca no inteiro teor. Default \"ementa\".",
               "type": "select",
               "options": [
                 "ementa",
@@ -1363,7 +1363,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "DD/MM/AAAA. Backend: dataJulgamentoInicial / dataJulgamentoFinal.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -1383,7 +1383,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "DD/MM/AAAA. Backend: dataPublicacaoInicial / dataPublicacaoFinal.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -1417,7 +1417,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo livre buscado no acordao/ementa.",
               "type": "text",
               "default": ""
             },
@@ -1426,7 +1426,7 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do assunto.",
               "type": "text",
               "default": ""
             },
@@ -1435,7 +1435,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da classe processual.",
               "type": "text",
               "default": ""
             },
@@ -1444,7 +1444,7 @@
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da comarca.",
               "type": "text",
               "default": ""
             },
@@ -1453,7 +1453,7 @@
               "label": "Termo na ementa",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Termo buscado especificamente na ementa.",
               "type": "text",
               "default": ""
             },
@@ -1462,7 +1462,7 @@
               "label": "Numero do recurso",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero do recurso.",
               "type": "text",
               "default": ""
             },
@@ -1471,7 +1471,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -1480,7 +1480,7 @@
               "label": "Origem",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"T\" (segundo grau, default) ou \"R\" (colegio recursal).",
               "type": "select",
               "options": [
                 "T",
@@ -1493,7 +1493,7 @@
               "label": "Tipo de decisao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Default \"acordao\".",
               "type": "select",
               "options": [
                 "acordao",
@@ -1506,7 +1506,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -1526,7 +1526,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de publicacao.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -1546,7 +1546,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": null,
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -1675,7 +1675,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
             },
@@ -1684,7 +1684,7 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Assunto.",
               "type": "text",
               "default": ""
             },
@@ -1693,7 +1693,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Classe processual.",
               "type": "text",
               "default": ""
             },
@@ -1702,7 +1702,7 @@
               "label": "Orgao julgador colegiado",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Orgao colegiado.",
               "type": "text",
               "default": ""
             },
@@ -1711,7 +1711,7 @@
               "label": "Origem",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Lista de origens (default backend: [\"tribunal de justica do estado do para\"]).",
               "type": "text",
               "default": ""
             },
@@ -1720,7 +1720,7 @@
               "label": "Query scope",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"ementa\" ou \"inteiroteor\". Default \"ementa\".",
               "type": "text",
               "default": "ementa"
             },
@@ -1729,7 +1729,7 @@
               "label": "Query type",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"free\" ou \"any\". Default \"free\".",
               "type": "text",
               "default": "free"
             },
@@ -1738,7 +1738,7 @@
               "label": "Relator",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Nome do relator.",
               "type": "text",
               "default": ""
             },
@@ -1747,7 +1747,7 @@
               "label": "Sort by",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Campo de ordenacao. Default \"datajulgamento\".",
               "type": "text",
               "default": "datajulgamento"
             },
@@ -1756,7 +1756,7 @@
               "label": "Sort order",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"asc\" ou \"desc\". Default \"desc\".",
               "type": "select",
               "options": [
                 "asc",
@@ -1769,7 +1769,7 @@
               "label": "Tipo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Lista de tipos de decisao (default backend: [\"acordao\", \"decisao monocratica\"]).",
               "type": "text",
               "default": ""
             },
@@ -1778,7 +1778,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "YYYY-MM-DD.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -1798,7 +1798,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "YYYY-MM-DD.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -1832,7 +1832,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre (busca na ementa).",
               "type": "text",
               "default": ""
             },
@@ -1841,7 +1841,7 @@
               "label": "Decisoes",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Se True, inclui decisoes monocraticas.",
               "type": "checkbox",
               "default": false
             },
@@ -1850,7 +1850,7 @@
               "label": "Id classe",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID da classe judicial. Aceita o alias deprecado id_classe_judicial (refs #129).",
               "type": "text",
               "default": ""
             },
@@ -1859,7 +1859,7 @@
               "label": "Id orgao julgador",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -1868,7 +1868,7 @@
               "label": "Id origem",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Filtro de origem. \"8,2\" para todos (default), \"8\" para Turmas Recursais, \"2\" para Tribunal Pleno/Camaras.",
               "type": "text",
               "default": "8,2"
             },
@@ -1877,7 +1877,7 @@
               "label": "Id relator",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID do relator.",
               "type": "text",
               "default": ""
             },
@@ -1886,7 +1886,7 @@
               "label": "Numero processo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero CNJ do processo. Aceita o alias deprecado nr_processo.",
               "type": "text",
               "default": ""
             },
@@ -1895,7 +1895,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD ou YYYY/MM/DD. Convertido para YYYY-MM-DD antes do envio ao backend. O backend filtra por uma data interna de disponibilizacao (nao por dt_ementa); o cliente aplica um post-filter local sobre data_julgamento para garantir que a janela pedida bate com o que e devolvido (refs #195).",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2022,7 +2022,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
             },
@@ -2031,7 +2031,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Classe processual (deve bater com o valor do dropdown).",
               "type": "text",
               "default": ""
             },
@@ -2040,7 +2040,7 @@
               "label": "Orgao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Orgao julgador (deve bater com o valor do dropdown).",
               "type": "text",
               "default": ""
             },
@@ -2049,7 +2049,7 @@
               "label": "Relator",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Nome do relator (deve bater com o valor do dropdown).",
               "type": "text",
               "default": ""
             },
@@ -2058,7 +2058,7 @@
               "label": "Tipo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Tipo de decisao. Opcoes: \"Acordao\", \"Decisao Terminativa\", \"Sumula\".",
               "type": "text",
               "default": ""
             },
@@ -2067,7 +2067,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "YYYY-MM-DD. Mapeado para data_min/data_max no GET (refs #94).",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2164,7 +2164,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
             },
@@ -2173,7 +2173,7 @@
               "label": "Competencia",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"1\" civel / \"2\" criminal / \"3\" ambos. Default \"1\". Backend: cmbCompetencia.",
               "type": "text",
               "default": "1"
             },
@@ -2182,7 +2182,7 @@
               "label": "Magistrado codigo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "IDs internos do magistrado, separados por virgula. Backend: hfCodMags.",
               "type": "text",
               "default": ""
             },
@@ -2191,7 +2191,7 @@
               "label": "Orgao codigo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "IDs internos do orgao julgador, separados por virgula. Backend: hfCodOrgs.",
               "type": "text",
               "default": ""
             },
@@ -2200,7 +2200,7 @@
               "label": "Origem",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"1\" 2o grau (default). Backend: cmbOrigem.",
               "type": "text",
               "default": "1"
             },
@@ -2209,7 +2209,7 @@
               "label": "Tipo acordao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Inclui acordaos. Default True. Backend: chkAcordao.",
               "type": "checkbox",
               "default": true
             },
@@ -2218,7 +2218,7 @@
               "label": "Tipo monocratica",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Inclui decisoes monocraticas. Default True. Backend: chkDecMon.",
               "type": "checkbox",
               "default": true
             },
@@ -2227,7 +2227,7 @@
               "label": "Ano fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Ano de julgamento. **Granularidade anual e o unico filtro de data exposto pelo backend ASPX** - use estes em vez de data_julgamento_*. Backend: cmbAnoInicio / cmbAnoFim.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2261,7 +2261,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre (busca na ementa).",
               "type": "text",
               "default": ""
             },
@@ -2270,7 +2270,7 @@
               "label": "Decisoes",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"Monocraticas\", \"Colegiadas\", \"Sentencas\" ou vazio para todos.",
               "type": "text",
               "default": ""
             },
@@ -2279,7 +2279,7 @@
               "label": "Grau",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"1\" (primeiro), \"2\" (segundo) ou vazio para todos.",
               "type": "text",
               "default": ""
             },
@@ -2288,7 +2288,7 @@
               "label": "Id classe",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID da classe judicial. Aceita o alias deprecado id_classe_judicial (refs #129).",
               "type": "text",
               "default": ""
             },
@@ -2297,7 +2297,7 @@
               "label": "Id colegiado",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID do colegiado.",
               "type": "text",
               "default": ""
             },
@@ -2306,7 +2306,7 @@
               "label": "Id orgao julgador",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -2315,7 +2315,7 @@
               "label": "Id relator",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID do relator.",
               "type": "text",
               "default": ""
             },
@@ -2324,7 +2324,7 @@
               "label": "Jurisdicoes",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"Tribunal de Justica\", \"Turmas Recursais\" ou vazio para todos.",
               "type": "text",
               "default": ""
             },
@@ -2333,7 +2333,7 @@
               "label": "Numero processo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero CNJ do processo. Aceita o alias deprecado nr_processo.",
               "type": "text",
               "default": ""
             },
@@ -2342,7 +2342,7 @@
               "label": "Sistema",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"PJE\", \"SAJ\" ou vazio para todos.",
               "type": "text",
               "default": ""
             },
@@ -2351,7 +2351,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "YYYY-MM-DD. Convertido para DD-MM-YYYY antes do envio ao backend.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2385,7 +2385,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
             },
@@ -2394,7 +2394,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Nome da classe judicial. Aceita o alias deprecado classe_judicial (refs #129).",
               "type": "text",
               "default": ""
             },
@@ -2403,7 +2403,7 @@
               "label": "Instancia",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Instancias (ex.: [1], [2], [1, 2]).",
               "type": "text",
               "default": ""
             },
@@ -2412,7 +2412,7 @@
               "label": "Numero processo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero CNJ. Aceita o alias deprecado nr_processo.",
               "type": "text",
               "default": ""
             },
@@ -2421,7 +2421,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -2430,7 +2430,7 @@
               "label": "Orgao julgador colegiado",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "ID do orgao colegiado.",
               "type": "text",
               "default": ""
             },
@@ -2439,7 +2439,7 @@
               "label": "Relator",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Nome do relator. Aceita o alias deprecado magistrado (refs #129).",
               "type": "text",
               "default": ""
             },
@@ -2448,7 +2448,7 @@
               "label": "Termo exato",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Busca por termo exato.",
               "type": "checkbox",
               "default": false
             },
@@ -2457,7 +2457,7 @@
               "label": "Tipo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Tipos de documento. Default backend [\"EMENTA\"]. Opcoes incluem \"ACORDAO\", \"DECISAO\", \"SENTENCA\", \"VOTO\", etc.",
               "type": "text",
               "default": ""
             },
@@ -2466,7 +2466,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "YYYY-MM-DD.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2500,7 +2500,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre (busca na ementa).",
               "type": "text",
               "default": ""
             },
@@ -2509,7 +2509,7 @@
               "label": "Especie",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Codigos do tipo de decisao (ex.: [\"ACORDAO\"]). Backend: menuinicial:tipoEspecieList.",
               "type": "text",
               "default": ""
             },
@@ -2518,7 +2518,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Codigos do orgao julgador (ex.: [\"PRIMEIRA_TURMA_CIVEL\"]). Backend: menuinicial:tipoOrgaoList.",
               "type": "text",
               "default": ""
             },
@@ -2527,7 +2527,7 @@
               "label": "Relator",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Nome do relator. **Aceito por compat de API**, mas hoje o backend nao expoe campo de texto livre para relator (virou multi-select de IDs); o filtro e descartado pelo Projudi/PrimeFaces. Refs #158 (deprecation/remocao planejada).",
               "type": "text",
               "default": ""
             },
@@ -2536,7 +2536,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "DD/MM/AAAA. Backend: menuinicial:datainicial_input / menuinicial:datafinal_input.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2687,7 +2687,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
             },
@@ -2696,7 +2696,7 @@
               "label": "Campo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Campo de busca: \"E\" para ementa (default), \"I\" para inteiro teor.",
               "type": "select",
               "options": [
                 "E",
@@ -2709,7 +2709,7 @@
               "label": "Processo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Filtro por numero do processo.",
               "type": "text",
               "default": ""
             },
@@ -2718,7 +2718,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "YYYY-MM-DD. Mapeado para dt_decisao_* no backend.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2738,7 +2738,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "YYYY-MM-DD.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2772,7 +2772,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo livre buscado no acordao/ementa. Limite de 120 caracteres (raises QueryTooLongError).",
               "type": "text",
               "default": ""
             },
@@ -2781,7 +2781,7 @@
               "label": "Assunto (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do assunto.",
               "type": "text",
               "default": ""
             },
@@ -2790,7 +2790,7 @@
               "label": "Buscar em segundo grau",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "True (default) busca em segundo grau; False busca em colegio recursal.",
               "type": "checkbox",
               "default": true
             },
@@ -2799,7 +2799,7 @@
               "label": "Classe (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da classe processual.",
               "type": "text",
               "default": ""
             },
@@ -2808,7 +2808,7 @@
               "label": "Comarca (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno da comarca.",
               "type": "text",
               "default": ""
             },
@@ -2817,7 +2817,7 @@
               "label": "Termo na ementa",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Termo buscado especificamente na ementa.",
               "type": "text",
               "default": ""
             },
@@ -2826,7 +2826,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "ID interno do orgao julgador.",
               "type": "text",
               "default": ""
             },
@@ -2835,7 +2835,7 @@
               "label": "Tipo de decisao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Default \"acordao\".",
               "type": "select",
               "options": [
                 "acordao",
@@ -2848,7 +2848,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2868,7 +2868,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": null,
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao.",
               "type": "checkbox",
               "default": true
             }
@@ -2881,7 +2881,7 @@
               "label": "Termo de pesquisa",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Termo livre buscado na decisao. Default \"\" (sem termo). Limite de 120 caracteres (raises QueryTooLongError).",
               "type": "text",
               "default": ""
             },
@@ -2890,7 +2890,7 @@
               "label": "Assuntos (IDs internos)",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "IDs internos de assunto. Backend: assuntoTreeSelection.values (CSV).",
               "type": "text",
               "default": ""
             },
@@ -2899,7 +2899,7 @@
               "label": "Classes (IDs internos)",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "IDs internos de classe processual. Backend: classeTreeSelection.values (CSV).",
               "type": "text",
               "default": ""
             },
@@ -2908,7 +2908,7 @@
               "label": "Numero do processo (CNJ)",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Numero CNJ formatado para filtrar uma instancia especifica. Normalizado via clean_cnj antes do envio.",
               "type": "text",
               "default": ""
             },
@@ -2917,7 +2917,7 @@
               "label": "Varas (IDs internos)",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "IDs internos de vara, no formato em arvore do TJSP (ex.: \"1-1-1\"). Backend: varasTreeSelection.values (CSV).",
               "type": "text",
               "default": ""
             },
@@ -2926,7 +2926,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2946,7 +2946,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": null,
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por id_processo. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -2969,7 +2969,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
             },
@@ -2978,7 +2978,7 @@
               "label": "Numero processo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Filtro por numero CNJ do processo.",
               "type": "text",
               "default": ""
             },
@@ -2987,7 +2987,7 @@
               "label": "Ordenacao",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"DESC\" (mais recentes, default), \"ASC\" (mais antigos), \"RELEV\" (mais relevantes).",
               "type": "select",
               "options": [
                 "ASC",
@@ -3001,7 +3001,7 @@
               "label": "Soementa",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Se True, restringe busca ao texto da ementa.",
               "type": "checkbox",
               "default": false
             },
@@ -3010,7 +3010,7 @@
               "label": "Tipo documento",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"acordaos\" (default), \"decisoes\" ou \"sentencas\".",
               "type": "select",
               "options": [
                 "acordaos",
@@ -3024,7 +3024,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Data final (mesmos formatos).",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -3034,7 +3034,7 @@
               "label": "Julgamento - inicio",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Data inicial. Aceita DD/MM/YYYY, DD-MM-YYYY, YYYY-MM-DD, YYYY/MM/DD, date ou datetime.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""

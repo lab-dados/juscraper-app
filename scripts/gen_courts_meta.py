@@ -11,7 +11,9 @@ Reexecutar sempre que o juscraper for atualizado:
 """
 from __future__ import annotations
 
+import inspect
 import json
+import re
 import types
 import typing
 from importlib import import_module
@@ -70,6 +72,39 @@ def humanize(name: str) -> str:
     return LABELS.get(name, name.replace("_", " ").capitalize())
 
 
+def _clean_desc(text: str) -> str:
+    """Limpa marcacao RST e travessoes da descricao extraida da docstring."""
+    text = re.sub(r"``([^`]*)``", r"\1", text)              # ``x`` -> x
+    text = re.sub(r":[a-z]+:`~?([^`]*)`", r"\1", text)       # :class:`X` -> X
+    text = re.sub(r"\s+", " ", text).strip()
+    text = text.replace("—", "-").replace("–", "-")  # sem travessoes
+    return text
+
+
+def extract_param_docs(method) -> dict[str, str]:
+    """Extrai descricoes de parametros da docstring (Google-style) do metodo.
+
+    Cobre tanto os bullets ``* ``nome`` (tipo): desc`` quanto entradas de
+    primeiro nivel em Args (ex.: ``pesquisa (str): ...``). Tribunais cuja
+    docstring nao documenta os filtros simplesmente nao geram entradas.
+    """
+    doc = inspect.getdoc(method) or ""
+    docs: dict[str, str] = {}
+    # bullets dentro de **kwargs
+    for m in re.finditer(
+        r"``(\w+)``\s*\([^)]*\)\s*:\s*(.+?)(?=\n\s*\*\s*``|\n\s*\n|\Z)", doc, re.DOTALL
+    ):
+        docs.setdefault(m.group(1), _clean_desc(m.group(2)))
+    # entradas de primeiro nivel (pesquisa, etc.)
+    for m in re.finditer(
+        r"\n\s*(\w+)\s*\([^)]*\)\s*:\s*(.+?)(?=\n\s*\w+\s*\(|\n\s*\*\*|\n\s*\n|\Z)",
+        doc,
+        re.DOTALL,
+    ):
+        docs.setdefault(m.group(1), _clean_desc(m.group(2)))
+    return docs
+
+
 def _strip_optional(ann: Any) -> tuple[Any, bool]:
     """Remove ``| None`` de um Union, retornando (tipo_base, era_opcional)."""
     origin = typing.get_origin(ann)
@@ -92,7 +127,7 @@ def _is_list_type(ann: Any) -> bool:
     return typing.get_origin(ann) in (list, typing.List)
 
 
-def describe_field(name: str, field: Any) -> dict[str, Any] | None:
+def describe_field(name: str, field: Any, docs: dict[str, str]) -> dict[str, Any] | None:
     """Converte um FieldInfo do pydantic num descritor JSON-serializavel."""
     if name in HIDDEN_FIELDS:
         return None
@@ -102,12 +137,15 @@ def describe_field(name: str, field: Any) -> dict[str, Any] | None:
     has_default = default is not None and repr(default) != "PydanticUndefined"
     required = repr(field.default) == "PydanticUndefined"
 
+    # Prioridade da ajuda: docstring do juscraper > description do schema > None.
+    help_text = docs.get(name) or field.description or None
+
     desc: dict[str, Any] = {
         "name": name,
         "label": humanize(name),
         "required": required,
         "advanced": name in ADVANCED_FIELDS,
-        "help": field.description or None,
+        "help": help_text,
     }
 
     # Datas: campos *_inicio / *_fim em string, formato DD/MM/AAAA.
@@ -147,10 +185,10 @@ def describe_field(name: str, field: Any) -> dict[str, Any] | None:
     return desc
 
 
-def schema_to_fields(model: type[BaseModel]) -> list[dict[str, Any]]:
+def schema_to_fields(model: type[BaseModel], docs: dict[str, str]) -> list[dict[str, Any]]:
     fields: list[dict[str, Any]] = []
     for name, field in model.model_fields.items():
-        d = describe_field(name, field)
+        d = describe_field(name, field, docs)
         if d is not None:
             fields.append(d)
     # pesquisa primeiro, depois principais, datas, depois avancados.
@@ -210,12 +248,14 @@ def build() -> dict[str, Any]:
         if hasattr(cls, "cjsg"):
             model = resolve_cjsg_schema(sigla, cls)
             if model is not None:
-                endpoints["cjsg"] = {"fields": schema_to_fields(model)}
+                docs = extract_param_docs(cls.cjsg)
+                endpoints["cjsg"] = {"fields": schema_to_fields(model, docs)}
 
         if hasattr(cls, "cjpg"):
             model = resolve_cjpg_schema(sigla)
             if model is not None:
-                endpoints["cjpg"] = {"fields": schema_to_fields(model)}
+                docs = extract_param_docs(cls.cjpg)
+                endpoints["cjpg"] = {"fields": schema_to_fields(model, docs)}
 
         support = SUPPORT.get(sigla, {"status": "supported", "reason": ""})
         courts.append({

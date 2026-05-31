@@ -50,6 +50,7 @@ export interface RunResult {
   columns: string[];
   records: Record<string, unknown>[];
   csv: string;
+  xlsx_b64: string;
   n_rows: number;
   error?: string;
   traceback?: string;

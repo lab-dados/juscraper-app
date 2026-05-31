@@ -10,6 +10,8 @@ import { EstimateDialog } from "./components/EstimateDialog";
 import { ProgressBar } from "./components/ProgressBar";
 import { ResultsTable } from "./components/ResultsTable";
 import { ErrorIssueCard } from "./components/ErrorIssueCard";
+import { Footer } from "./components/Footer";
+import { buildCode } from "./lib/utils";
 
 const meta = courtsMetaRaw as CourtsMeta;
 const PROXY_URL = (import.meta.env.VITE_PROXY_URL as string | undefined) ?? "";
@@ -43,6 +45,7 @@ export default function App() {
   const [count, setCount] = useState<CountResult | null>(null);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [result, setResult] = useState<RunResult | null>(null);
+  const [ranPaginas, setRanPaginas] = useState<number | null>(null);
   const [error, setError] = useState<ErrorInfo | null>(null);
 
   // Inicializa o Pyodide uma vez.
@@ -117,6 +120,7 @@ export default function App() {
         columns: [],
         records: [],
         csv: "",
+        xlsx_b64: "",
         n_rows: 0,
         error: String(e),
         traceback: String(e),
@@ -132,6 +136,7 @@ export default function App() {
       setPhase("form");
       return;
     }
+    setRanPaginas(paginas);
     setResult(res);
     setPhase("done");
   }
@@ -143,7 +148,7 @@ export default function App() {
           <div>
             <h1 className="text-lg font-bold tracking-tight">juscraper</h1>
             <p className="text-xs text-fgv-100/80">
-              Busca de jurisprudência nos tribunais brasileiros · FGV
+              Ferramenta de apoio para busca de jurisprudência nos tribunais brasileiros
             </p>
           </div>
           <BootBadge state={boot} msg={bootMsg} />
@@ -156,7 +161,7 @@ export default function App() {
         {!PROXY_URL && (
           <div className="card border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
             <strong>Proxy não configurado.</strong> Defina <code>VITE_PROXY_URL</code> em{" "}
-            <code>web/.env</code> (veja <code>proxy/README.md</code>) — sem ele as buscas falham
+            <code>web/.env</code> (veja <code>proxy/README.md</code>). Sem ele as buscas falham
             por CORS.
           </div>
         )}
@@ -201,7 +206,12 @@ export default function App() {
         )}
 
         {phase === "done" && result && sigla && (
-          <ResultsTable result={result} sigla={sigla} endpoint={endpoint} />
+          <ResultsTable
+            result={result}
+            sigla={sigla}
+            endpoint={endpoint}
+            code={buildCode({ sigla, endpoint, params: values, paginas: ranPaginas })}
+          />
         )}
 
         {error && (
@@ -224,6 +234,8 @@ export default function App() {
           onCancel={() => setPhase("form")}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

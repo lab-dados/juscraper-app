@@ -41,8 +41,8 @@ export function TribunalSelect({
           return (
             <option key={c.sigla} value={c.sigla} disabled={disabled}>
               {c.nome}
-              {disabled ? " — indisponível (captcha)" : ""}
-              {c.support.status === "experimental" ? " — experimental" : ""}
+              {disabled ? " (indisponível: captcha)" : ""}
+              {c.support.status === "experimental" ? " (experimental)" : ""}
             </option>
           );
         })}

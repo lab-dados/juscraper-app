@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { RunResult } from "../types";
 import { downloadBase64, downloadText } from "../lib/utils";
+import { track } from "../lib/analytics";
 import { CodeView } from "./CodeView";
 
 const PAGE_SIZE = 20;
@@ -79,7 +80,7 @@ export function ResultsTable({
       </div>
 
       {tab === "codigo" ? (
-        <CodeView code={code} />
+        <CodeView code={code} sigla={sigla} endpoint={endpoint} />
       ) : (
         <>
           <div className="flex flex-wrap items-center justify-end gap-2 border-b border-fgv-100 p-3">
@@ -94,13 +95,19 @@ export function ResultsTable({
             />
             <button
               className="btn-secondary"
-              onClick={() => downloadText(`${sigla}_${endpoint}.csv`, result.csv)}
+              onClick={() => {
+                track("download", { formato: "csv", tribunal: sigla, endpoint });
+                downloadText(`${sigla}_${endpoint}.csv`, result.csv);
+              }}
             >
               ⬇ CSV
             </button>
             <button
               className="btn-primary"
-              onClick={() => downloadBase64(`${sigla}_${endpoint}.xlsx`, result.xlsx_b64, XLSX_MIME)}
+              onClick={() => {
+                track("download", { formato: "xlsx", tribunal: sigla, endpoint });
+                downloadBase64(`${sigla}_${endpoint}.xlsx`, result.xlsx_b64, XLSX_MIME);
+              }}
             >
               ⬇ XLSX
             </button>

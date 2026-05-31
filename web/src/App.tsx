@@ -12,6 +12,7 @@ import { ResultsTable } from "./components/ResultsTable";
 import { ErrorIssueCard } from "./components/ErrorIssueCard";
 import { Footer } from "./components/Footer";
 import { buildCode } from "./lib/utils";
+import { track } from "./lib/analytics";
 
 const meta = courtsMetaRaw as CourtsMeta;
 const PROXY_URL = (import.meta.env.VITE_PROXY_URL as string | undefined) ?? "";
@@ -83,6 +84,7 @@ export default function App() {
 
   async function handleCalcular() {
     if (!clientRef.current || !sigla) return;
+    track("calcular", { tribunal: sigla, endpoint });
     setError(null);
     setPhase("counting");
     const res = await clientRef.current.count(sigla, endpoint, values).catch((e) => ({
@@ -93,6 +95,7 @@ export default function App() {
       traceback: String(e),
     } as CountResult));
     if (!res.ok) {
+      track("erro", { tribunal: sigla, endpoint, etapa: "calcular" });
       setError({
         error: res.error ?? "Erro ao calcular páginas",
         traceback: res.traceback ?? "",
@@ -124,6 +127,7 @@ export default function App() {
         traceback: String(e),
       } as RunResult));
     if (!res.ok) {
+      track("erro", { tribunal: sigla, endpoint, etapa: "busca" });
       setError({
         error: res.error ?? "Erro na busca",
         traceback: res.traceback ?? "",
@@ -134,6 +138,7 @@ export default function App() {
       setPhase("form");
       return;
     }
+    track("busca", { tribunal: sigla, endpoint, paginas: paginas ?? 0, linhas: res.n_rows });
     setRanPaginas(paginas);
     setResult(res);
     setPhase("done");

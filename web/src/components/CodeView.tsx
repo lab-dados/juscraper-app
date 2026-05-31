@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { COLAB_URL } from "../lib/links";
 import { createColabGist } from "../lib/utils";
+import { track } from "../lib/analytics";
 
 const PROXY_URL = (import.meta.env.VITE_PROXY_URL as string | undefined) ?? "";
 
-export function CodeView({ code }: { code: string }) {
+export function CodeView({
+  code,
+  sigla,
+  endpoint,
+}: {
+  code: string;
+  sigla: string;
+  endpoint: string;
+}) {
   const [copied, setCopied] = useState(false);
   const [colab, setColab] = useState<"idle" | "loading" | "error">("idle");
 
@@ -19,6 +28,7 @@ export function CodeView({ code }: { code: string }) {
     // Abre a aba já no clique (gesto do usuário) para não ser bloqueada por popup.
     const tab = window.open("", "_blank");
     setColab("loading");
+    track("colab", { tribunal: sigla, endpoint });
     try {
       const url = await createColabGist(PROXY_URL, code);
       if (tab) tab.location.href = url;

@@ -17,20 +17,84 @@ caso de erro, gera um link pré-preenchido para abrir issue no `juscraper`.
 
 ## Arquitetura
 
-```
-Browser (site estático: React + Vite + Tailwind)
-  └─ Web Worker (Pyodide)
-        ├─ juscraper instalado de um wheel vendorizado (public/wheels/)
-        ├─ requests roteado por um proxy CORS (cookies via X-Cookie/X-Set-Cookie)
-        └─ count() estima páginas · run() baixa com progresso (hook no tqdm)
-                         │ XHR síncrono
-                         ▼
-Cloudflare Worker (proxy CORS, free tier) → site do tribunal
+```mermaid
+flowchart TB
+  subgraph BR["Navegador (site estático no GitHub Pages)"]
+    UI["UI React + Vite + Tailwind<br/>tribunal · filtros · tabela"]
+    subgraph WK["Web Worker (Pyodide)"]
+      GLUE["glue.py<br/>count() · run() · progresso via tqdm"]
+      JUS["juscraper<br/>(wheel vendorizado)"]
+      GLUE --- JUS
+    end
+    UI <--> GLUE
+  end
+
+  PX["Cloudflare Worker<br/>proxy CORS + rota /gist"]
+  T["Sites dos tribunais<br/>(eSAJ, eproc, ...)"]
+  GIST["GitHub Gist → Google Colab"]
+  UM["Umami<br/>analytics (sem cookies)"]
+
+  GLUE -- "XHR: X-Target-URL, X-Cookie" --> PX
+  PX -- "HTTP + cookies" --> T
+  UI -- "POST /gist (código da busca)" --> PX
+  PX -- "cria gist não listado" --> GIST
+  UI -. "eventos: busca, download, ..." .-> UM
 ```
 
 Por que o proxy: o navegador bloqueia requisições diretas aos tribunais (eles
 não mandam cabeçalhos CORS). O proxy só repassa o HTTP e devolve a resposta com
 `Access-Control-Allow-Origin`. Ver [`proxy/README.md`](proxy/README.md).
+
+## Como funciona
+
+### Jornada do usuário
+
+```mermaid
+flowchart TD
+  A["Abre o app"] --> B["Escolhe o tipo de busca<br/>Jurisprudência (2º grau) ou Sentenças (1º grau)"]
+  B --> C["Escolhe o tribunal"]
+  C --> D["Preenche o formulário de filtros<br/>(gerado do schema do juscraper)"]
+  D --> E["Calcular e estimar"]
+  E --> F{"Estimativa:<br/>nº de páginas + tempo"}
+  F -- "Cancelar" --> D
+  F -- "Confirmar (até 100 páginas)" --> G["Download com barra de progresso"]
+  F -. "precisa de mais de 100?" .-> L["LabDados ou rodar via Colab"]
+  G -- "sucesso" --> H["Tabela interativa<br/>filtrar · ordenar · paginar"]
+  G -- "erro" --> I["Card de erro<br/>link pré-preenchido p/ issue"]
+  H --> J["Baixar CSV / XLSX"]
+  H --> K["Aba Código<br/>→ abrir no Colab com a busca"]
+```
+
+### O que acontece numa busca
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor U as Usuário
+  participant App as UI (React)
+  participant Py as Pyodide (glue + juscraper)
+  participant Px as Proxy (Cloudflare)
+  participant T as Tribunal
+
+  U->>App: preenche filtros e clica "Calcular"
+  App->>Py: count(tribunal, endpoint, params)
+  Py->>Px: 1ª página (X-Target-URL, X-Cookie)
+  Px->>T: GET/POST + cookies
+  T-->>Px: HTML (Set-Cookie)
+  Px-->>Py: HTML + X-Set-Cookie (base64)
+  Py-->>App: nº de páginas (capturado do total do tqdm)
+  App-->>U: estimativa → confirma
+  App->>Py: run(..., paginas)
+  loop cada página
+    Py->>Px: página N
+    Px->>T: requisição
+    T-->>Px: HTML
+    Px-->>Py: HTML
+    Py-->>App: progresso (i / total)
+  end
+  Py-->>App: DataFrame (JSON + CSV + XLSX)
+  App-->>U: tabela + downloads
+```
 
 ### Suporte por tribunal
 - **cjsg**: todos os 25 TJs.

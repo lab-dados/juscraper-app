@@ -25,3 +25,8 @@ results-*.png
 
 # NOTE: web/public/wheels/ (juscraper wheel vendorizado) É versionado de propósito.
 proxy/.dev.vars
+
+# Árvores de classes/assuntos (eSAJ): NÃO versionadas. Ficam na release "trees"
+# do repo (geradas por scripts/gen_trees.py) e são baixadas no deploy. Localmente,
+# rode scripts/gen_trees.py para popular esta pasta.
+web/public/trees/

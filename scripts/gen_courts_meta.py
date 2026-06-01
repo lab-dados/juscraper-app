@@ -67,6 +67,16 @@ LABELS = {
 # Ajuda contextual para campos de ID (nao ha lookup amigavel no v1).
 ID_HELP = "Use o ID interno do tribunal (ex.: copiado da busca avancada do site)."
 
+# Campos que viram seletor em arvore (TreeSelect) nos tribunais eSAJ, que
+# expoem os endpoints *TreeSelect.do via os metodos listar_* do juscraper.
+# As arvores estaticas ficam em web/public/trees/<sigla>.<endpoint>.<campo>.json
+# (geradas por scripts/gen_trees.py). Para tribunais nao-eSAJ, esses campos
+# continuam como texto/lista de IDs.
+TREE_FIELDS_BY_ENDPOINT: dict[str, set[str]] = {
+    "cjsg": {"classe", "assunto", "orgao_julgador"},
+    "cjpg": {"classe", "assunto", "vara"},
+}
+
 
 def humanize(name: str) -> str:
     return LABELS.get(name, name.replace("_", " ").capitalize())
@@ -127,7 +137,14 @@ def _is_list_type(ann: Any) -> bool:
     return typing.get_origin(ann) in (list, typing.List)
 
 
-def describe_field(name: str, field: Any, docs: dict[str, str]) -> dict[str, Any] | None:
+def describe_field(
+    name: str,
+    field: Any,
+    docs: dict[str, str],
+    *,
+    is_esaj: bool = False,
+    endpoint: str = "",
+) -> dict[str, Any] | None:
     """Converte um FieldInfo do pydantic num descritor JSON-serializavel."""
     if name in HIDDEN_FIELDS:
         return None
@@ -147,6 +164,16 @@ def describe_field(name: str, field: Any, docs: dict[str, str]) -> dict[str, Any
         "advanced": name in ADVANCED_FIELDS,
         "help": help_text,
     }
+
+    # Seletor em arvore: campos de classe/assunto/orgao/vara nos tribunais
+    # eSAJ ganham o TreeSelect (arvore estatica em web/public/trees/). O front
+    # cai no input de IDs se o JSON nao existir. Emite lista de IDs (string[]).
+    if is_esaj and name in TREE_FIELDS_BY_ENDPOINT.get(endpoint, set()):
+        desc["type"] = "tree"
+        desc["tree"] = {"endpoint": endpoint, "campo": name, "multiple": True}
+        desc["default"] = []
+        desc["help"] = help_text or "Selecione na arvore ou digite os IDs internos."
+        return desc
 
     # Datas: campos *_inicio / *_fim em string, formato DD/MM/AAAA.
     if name.endswith(("_inicio", "_fim")):
@@ -185,10 +212,16 @@ def describe_field(name: str, field: Any, docs: dict[str, str]) -> dict[str, Any
     return desc
 
 
-def schema_to_fields(model: type[BaseModel], docs: dict[str, str]) -> list[dict[str, Any]]:
+def schema_to_fields(
+    model: type[BaseModel],
+    docs: dict[str, str],
+    *,
+    is_esaj: bool = False,
+    endpoint: str = "",
+) -> list[dict[str, Any]]:
     fields: list[dict[str, Any]] = []
     for name, field in model.model_fields.items():
-        d = describe_field(name, field, docs)
+        d = describe_field(name, field, docs, is_esaj=is_esaj, endpoint=endpoint)
         if d is not None:
             fields.append(d)
     # pesquisa primeiro, depois principais, datas, depois avancados.
@@ -244,18 +277,24 @@ def build() -> dict[str, Any]:
             continue  # agregadores ficam de fora do v1 (sem cjsg/cjpg)
         cls = _court_scraper_cls(sigla)
         endpoints: dict[str, Any] = {}
+        # Familia eSAJ expoe listar_* (juscraper #228) -> tem arvores estaticas.
+        is_esaj = hasattr(cls, "listar_classes")
 
         if hasattr(cls, "cjsg"):
             model = resolve_cjsg_schema(sigla, cls)
             if model is not None:
                 docs = extract_param_docs(cls.cjsg)
-                endpoints["cjsg"] = {"fields": schema_to_fields(model, docs)}
+                endpoints["cjsg"] = {
+                    "fields": schema_to_fields(model, docs, is_esaj=is_esaj, endpoint="cjsg")
+                }
 
         if hasattr(cls, "cjpg"):
             model = resolve_cjpg_schema(sigla)
             if model is not None:
                 docs = extract_param_docs(cls.cjpg)
-                endpoints["cjpg"] = {"fields": schema_to_fields(model, docs)}
+                endpoints["cjpg"] = {
+                    "fields": schema_to_fields(model, docs, is_esaj=is_esaj, endpoint="cjpg")
+                }
 
         support = SUPPORT.get(sigla, {"status": "supported", "reason": ""})
         courts.append({

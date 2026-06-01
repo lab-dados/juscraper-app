@@ -82,16 +82,20 @@ export function buildCode(opts: {
   }
 
   const firstArg = pesquisa != null && pesquisa !== "" ? fmt(pesquisa) : null;
-  const callArgs = [firstArg, ...kwargs].filter(Boolean).join(",\n    ");
+  const args = [firstArg, ...kwargs].filter(Boolean) as string[];
+
+  // Sem nenhum argumento ainda (preview do formulario vazio): chamada limpa.
+  const call =
+    args.length === 0
+      ? `df = scraper.${endpoint}()`
+      : [`df = scraper.${endpoint}(`, `    ${args.join(",\n    ")},`, ")"].join("\n");
 
   return [
     "# pip install juscraper",
     "import juscraper as jus",
     "",
     `scraper = jus.scraper(${JSON.stringify(sigla)})`,
-    `df = scraper.${endpoint}(`,
-    `    ${callArgs},`,
-    ")",
+    call,
     "",
     "df.to_csv('resultado.csv', index=False)",
     "df.head()",

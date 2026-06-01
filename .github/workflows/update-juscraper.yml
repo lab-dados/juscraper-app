@@ -8,8 +8,14 @@ name: Atualizar juscraper (diário)
 
 on:
   schedule:
-    - cron: "0 6 * * *" # 06:00 UTC = 03:00 no horário de Brasília
+    - cron: "0 6 * * *" # 06:00 UTC = 03:00 BRT (diário): wheel + metadados
+    - cron: "0 7 1 * *" # dia 1 às 07:00 UTC (mensal): tambem regenera as arvores
   workflow_dispatch:
+    inputs:
+      regen_trees:
+        description: "Regenerar as arvores (classes/assuntos/orgaos/varas) em web/public/trees"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -36,44 +42,89 @@ jobs:
         run: |
           set -euo pipefail
 
+          # Quando regenerar as arvores: no cron mensal, no dispatch manual com
+          # regen_trees=true, ou quando a pasta de arvores estiver vazia (1a vez).
+          # Arvores sao grandes (~10 MB) e mudam devagar, entao NAO entram no
+          # diario para evitar churn de commit.
+          REGEN_TREES=false
+          if [ "${{ github.event.inputs.regen_trees }}" = "true" ]; then REGEN_TREES=true; fi
+          if [ "${{ github.event.schedule }}" = "0 7 1 * *" ]; then REGEN_TREES=true; fi
+          # 1a vez: se a release "trees" ainda nao tem assets, gera.
+          TREE_ASSETS=$(gh release view trees --repo "$GITHUB_REPOSITORY" --json assets -q '.assets | length' 2>/dev/null || echo 0)
+          if [ "$TREE_ASSETS" = "0" ]; then REGEN_TREES=true; fi
+          echo "regen_trees=$REGEN_TREES (assets na release: $TREE_ASSETS)"
+
           # 1. SHA atual do main; só prossegue se mudou desde o ultimo manifest.
           SHA=$(gh api "repos/${JUSCRAPER_REPO}/commits/${JUSCRAPER_REF}" -q .sha)
           REV=${SHA:0:12}
           CURRENT=$(jq -r '.rev // ""' web/public/wheels/manifest.json 2>/dev/null || echo "")
           echo "main=$REV | atual=$CURRENT"
+
+          python -m pip install --upgrade pip build
+
           if [ "$REV" = "$CURRENT" ]; then
-            echo "Sem mudança no juscraper. Encerrando."
-            exit 0
+            echo "Sem mudança no juscraper."
+            if [ "$REGEN_TREES" != "true" ]; then
+              echo "Nada a fazer. Encerrando."
+              exit 0
+            fi
+            # Sem rebuild do wheel: instala o wheel vendorizado para que o
+            # gen_trees consiga importar o juscraper.
+            pip install web/public/wheels/juscraper-*.whl
+          else
+            # 2. Builda o wheel a partir do GitHub main.
+            rm -f web/public/wheels/*.whl
+            pip wheel "git+https://github.com/${JUSCRAPER_REPO}@${JUSCRAPER_REF}" \
+              --no-deps -w web/public/wheels/
+            WHEEL=$(basename web/public/wheels/juscraper-*.whl)
+            VERSION=$(echo "$WHEEL" | sed -E 's/^juscraper-(.+)-py3-none-any\.whl$/\1/')
+            echo "wheel=$WHEEL versao=$VERSION"
+
+            # 3. Instala o wheel (com deps) e regenera os metadados dos tribunais.
+            #    Se o juscraper mudou de forma incompatível, isto falha e aborta tudo.
+            pip install "web/public/wheels/${WHEEL}"
+            python scripts/gen_courts_meta.py
+
+            # 4. Atualiza o manifest que o app lê em runtime.
+            jq -n --arg w "$WHEEL" --arg v "$VERSION" --arg r "$REV" \
+              '{wheel: $w, version: $v, rev: $r}' > web/public/wheels/manifest.json
           fi
 
-          # 2. Builda o wheel a partir do GitHub main.
-          python -m pip install --upgrade pip build
-          rm -f web/public/wheels/*.whl
-          pip wheel "git+https://github.com/${JUSCRAPER_REPO}@${JUSCRAPER_REF}" \
-            --no-deps -w web/public/wheels/
-          WHEEL=$(basename web/public/wheels/juscraper-*.whl)
-          VERSION=$(echo "$WHEEL" | sed -E 's/^juscraper-(.+)-py3-none-any\.whl$/\1/')
-          echo "wheel=$WHEEL versao=$VERSION"
+          # 5. Regenera as arvores (quando aplicavel) e sobe para a release
+          #    "trees" (ficam FORA do versionamento; o deploy.yml as baixa de la).
+          #    Tolerante: gen_trees.py vira no-op se o juscraper instalado nao
+          #    tiver os metodos listar_* (anterior ao PR #228); falha de rede
+          #    nao aborta o job.
+          TREES_CHANGED=false
+          if [ "$REGEN_TREES" = "true" ]; then
+            if python scripts/gen_trees.py; then
+              if ls web/public/trees/*.json >/dev/null 2>&1; then
+                gh release upload trees web/public/trees/*.json \
+                  --repo "$GITHUB_REPOSITORY" --clobber
+                TREES_CHANGED=true
+                echo "Arvores atualizadas na release 'trees'."
+              fi
+            else
+              echo "Regeneracao de arvores falhou (nao-fatal)."
+            fi
+          fi
 
-          # 3. Instala o wheel (com deps) e regenera os metadados dos tribunais.
-          #    Se o juscraper mudou de forma incompatível, isto falha e aborta tudo.
-          pip install "web/public/wheels/${WHEEL}"
-          python scripts/gen_courts_meta.py
-
-          # 4. Atualiza o manifest que o app lê em runtime.
-          jq -n --arg w "$WHEEL" --arg v "$VERSION" --arg r "$REV" \
-            '{wheel: $w, version: $v, rev: $r}' > web/public/wheels/manifest.json
-
-          # 5. Commita e dispara o deploy (push via GITHUB_TOKEN não dispara
-          #    o deploy.yml sozinho, por isso o workflow run explícito).
+          # 6. Commita wheel/metadados (se mudaram) e dispara o deploy. Push via
+          #    GITHUB_TOKEN nao dispara o deploy.yml sozinho, por isso o run
+          #    explicito. Tambem dispara quando so as arvores mudaram (nao ha
+          #    commit, mas o deploy precisa rebaixar os assets da release).
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add web/public/wheels web/src/data/courts_meta.json
-          if git diff --cached --quiet; then
-            echo "Nada para commitar (conteúdo idêntico)."
-            exit 0
+          COMMITTED=false
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: atualiza juscraper/metadados (${REV})"
+            git push
+            COMMITTED=true
           fi
-          git commit -m "chore: atualiza juscraper para ${VERSION} (${REV})"
-          git push
-          gh workflow run deploy.yml
-          echo "Atualizado para ${VERSION} (${REV}) e deploy disparado."
+          if [ "$COMMITTED" = "true" ] || [ "$TREES_CHANGED" = "true" ]; then
+            gh workflow run deploy.yml
+            echo "Deploy disparado (commit=$COMMITTED, arvores=$TREES_CHANGED)."
+          else
+            echo "Nada mudou. Encerrando."
+          fi

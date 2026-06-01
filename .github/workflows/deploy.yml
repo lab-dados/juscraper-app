@@ -28,6 +28,17 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
+      # Hidrata as árvores de classes/assuntos a partir da release "trees"
+      # (mantidas fora do versionamento). Non-fatal: se a release ainda não
+      # existir, o app cai no input manual de IDs.
+      - name: Baixar árvores (release "trees")
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p public/trees
+          gh release download trees --repo "${{ github.repository }}" \
+            --dir public/trees --pattern '*.json' --clobber \
+            || echo "Release 'trees' indisponível; seguindo sem árvores."
       - run: npm run build
         env:
           # Defina como variáveis do repositório (Settings > Variables).

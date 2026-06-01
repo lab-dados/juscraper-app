@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Field } from "../types";
+import { TreeSelect } from "./TreeSelect";
 
 export type FormValues = Record<string, unknown>;
 
@@ -7,12 +8,29 @@ function FieldInput({
   field,
   value,
   onChange,
+  sigla,
 }: {
   field: Field;
   value: unknown;
   onChange: (v: unknown) => void;
+  sigla: string;
 }) {
   const id = `f-${field.name}`;
+
+  if (field.type === "tree" && field.tree) {
+    const arr = Array.isArray(value) ? (value as string[]) : [];
+    return (
+      <TreeSelect
+        key={`${sigla}.${field.tree.endpoint}.${field.tree.campo}`}
+        sigla={sigla}
+        tree={field.tree}
+        value={arr}
+        onChange={onChange}
+        label={field.label}
+        help={field.help}
+      />
+    );
+  }
 
   if (field.type === "checkbox") {
     return (
@@ -95,10 +113,12 @@ export function DynamicForm({
   fields,
   values,
   onChange,
+  sigla,
 }: {
   fields: Field[];
   values: FormValues;
   onChange: (v: FormValues) => void;
+  sigla: string;
 }) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const main = fields.filter((f) => !f.advanced);
@@ -110,8 +130,11 @@ export function DynamicForm({
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {main.map((f) => (
-          <div key={f.name} className={f.type === "text" && f.name === "pesquisa" ? "md:col-span-2" : ""}>
-            <FieldInput field={f} value={values[f.name]} onChange={(v) => set(f.name, v)} />
+          <div
+            key={f.name}
+            className={(f.type === "text" && f.name === "pesquisa") || f.type === "tree" ? "md:col-span-2" : ""}
+          >
+            <FieldInput field={f} value={values[f.name]} onChange={(v) => set(f.name, v)} sigla={sigla} />
           </div>
         ))}
       </div>
@@ -128,7 +151,13 @@ export function DynamicForm({
           {showAdvanced && (
             <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
               {advanced.map((f) => (
-                <FieldInput key={f.name} field={f} value={values[f.name]} onChange={(v) => set(f.name, v)} />
+                <FieldInput
+                  key={f.name}
+                  field={f}
+                  value={values[f.name]}
+                  onChange={(v) => set(f.name, v)}
+                  sigla={sigla}
+                />
               ))}
             </div>
           )}
@@ -143,7 +172,7 @@ export function initialValues(fields: Field[]): FormValues {
   const v: FormValues = {};
   for (const f of fields) {
     if (f.type === "checkbox") v[f.name] = Boolean(f.default);
-    else if (f.type === "list") v[f.name] = [];
+    else if (f.type === "list" || f.type === "tree") v[f.name] = [];
     else if (f.type === "select") v[f.name] = (f.default as string) ?? f.options?.[0] ?? "";
     else v[f.name] = (f.default as string) ?? "";
   }

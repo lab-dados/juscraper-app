@@ -26,7 +26,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "assunto",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -35,7 +40,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "classe",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -80,7 +90,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "orgao_julgador",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -187,7 +202,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "assunto",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -196,7 +216,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "classe",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -241,7 +266,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "orgao_julgador",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -348,7 +378,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "assunto",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -357,7 +392,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "classe",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -402,7 +442,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "orgao_julgador",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -755,7 +800,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "assunto",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -764,7 +814,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "classe",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -809,7 +864,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "orgao_julgador",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -1463,7 +1523,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do assunto. Backend: assuntosTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "assunto",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -1472,7 +1537,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) da classe processual. Backend: classesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "classe",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -1517,7 +1587,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) interno(s) do orgao julgador. Backend: secoesTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "orgao_julgador",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -2827,7 +2902,12 @@
               "required": false,
               "advanced": false,
               "help": "ID interno do assunto.",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "assunto",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -2845,7 +2925,12 @@
               "required": false,
               "advanced": false,
               "help": "ID interno da classe processual.",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "classe",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -2881,7 +2966,12 @@
               "required": false,
               "advanced": false,
               "help": "ID interno do orgao julgador.",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjsg",
+                "campo": "orgao_julgador",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -2945,7 +3035,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) internos de assunto. Backend: assuntoTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjpg",
+                "campo": "assunto",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -2954,7 +3049,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) internos de classe processual. Backend: classeTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjpg",
+                "campo": "classe",
+                "multiple": true
+              },
               "default": []
             },
             {
@@ -2981,7 +3081,12 @@
               "required": false,
               "advanced": false,
               "help": "ID(s) internos de vara, no formato em arvore do TJSP (ex.: \"1-1-1\"). Backend: varasTreeSelection.values (CSV).",
-              "type": "list",
+              "type": "tree",
+              "tree": {
+                "endpoint": "cjpg",
+                "campo": "vara",
+                "multiple": true
+              },
               "default": []
             },
             {

@@ -9,6 +9,7 @@ import { DynamicForm, initialValues, type FormValues } from "./components/Dynami
 import { EstimateDialog } from "./components/EstimateDialog";
 import { ProgressBar } from "./components/ProgressBar";
 import { ResultsTable } from "./components/ResultsTable";
+import { CodePreview } from "./components/CodePreview";
 import { ErrorIssueCard } from "./components/ErrorIssueCard";
 import { Footer } from "./components/Footer";
 import { buildCode } from "./lib/utils";
@@ -176,7 +177,7 @@ export default function App() {
 
             {court && fields.length > 0 && (
               <>
-                <DynamicForm fields={fields} values={values} onChange={setValues} />
+                <DynamicForm fields={fields} values={values} onChange={setValues} sigla={sigla ?? ""} />
                 <div className="flex items-center gap-3">
                   <button
                     className="btn-primary"
@@ -189,6 +190,13 @@ export default function App() {
                     <span className="text-sm text-fgv-400">Aguarde o Python carregar…</span>
                   )}
                 </div>
+                {sigla && (
+                  <CodePreview
+                    code={buildCode({ sigla, endpoint, params: values, paginas: null })}
+                    sigla={sigla}
+                    endpoint={endpoint}
+                  />
+                )}
               </>
             )}
 

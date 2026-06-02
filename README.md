@@ -110,8 +110,10 @@ sequenceDiagram
 | `web/src/pyodide/glue.py` | Glue Python: install, roteamento de rede, count/run |
 | `web/src/data/courts_meta.json` | Metadados gerados (campos por tribunal) |
 | `web/public/wheels/` | Wheel do juscraper vendorizado (versionado) |
+| `web/public/trees/` | Árvores de classes/assuntos (eSAJ); **não versionado**, baixado da release no deploy |
 | `proxy/` | Cloudflare Worker (proxy CORS) |
 | `scripts/gen_courts_meta.py` | Gera `courts_meta.json` a partir dos schemas |
+| `scripts/gen_trees.py` | Gera as árvores em `web/public/trees/` (publicadas na release `trees`) |
 | `scripts/spike_proxy.py` | Teste headless do fluxo proxy + juscraper |
 
 ## Desenvolvimento
@@ -150,6 +152,28 @@ Para atualizar **manualmente** (ou regenerar os metadados localmente):
 # e, se trocar o wheel, atualize web/public/wheels/ + manifest.json
 ```
 Ou dispare a Action na mão: **Actions > Atualizar juscraper (diário) > Run workflow**.
+
+### Seletor de classes/assuntos (árvores eSAJ)
+
+Os campos `classe`, `assunto`, `orgao_julgador` (cjsg) e `vara` (cjpg) dos
+tribunais da família eSAJ usam um seletor visual em árvore, alimentado por JSON
+em `<sigla>.<endpoint>.<campo>.json`. Esses arquivos são gerados pelos métodos
+`listar_*` do juscraper (a partir dos endpoints `*TreeSelect.do`) via:
+```bash
+.venv/Scripts/python.exe scripts/gen_trees.py   # popula web/public/trees/ (local)
+```
+Para **não pesar o versionamento** (somam ~11 MB), as árvores ficam na release
+[`trees`](https://github.com/lab-dados/juscraper-app/releases/tag/trees) do repo,
+e **não** são commitadas (`web/public/trees/` está no `.gitignore`). O
+[`deploy.yml`](.github/workflows/deploy.yml) baixa os assets dessa release antes do
+build, então o GitHub Pages serve as árvores na mesma origem (sem CORS). O app cai
+no input manual de IDs se uma árvore não estiver disponível.
+
+As árvores mudam devagar, então a Action **não** as regenera no run diário: só no
+cron mensal (dia 1) ou quando disparada com `regen_trees=true`. Nesses casos ela
+roda `gen_trees.py`, sobe os JSON para a release (`gh release upload trees ... --clobber`)
+e dispara o deploy. O `gen_trees.py` vira no-op se o juscraper instalado não tiver
+os métodos `listar_*`.
 
 ## Deploy
 

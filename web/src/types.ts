@@ -1,6 +1,12 @@
 // Tipos compartilhados entre a UI e o bridge do Pyodide.
 
-export type FieldType = "text" | "textarea" | "checkbox" | "select" | "date" | "list";
+export type FieldType = "text" | "textarea" | "checkbox" | "select" | "date" | "list" | "tree";
+
+export interface TreeMeta {
+  endpoint: string;
+  campo: string;
+  multiple: boolean;
+}
 
 export interface Field {
   name: string;
@@ -12,6 +18,7 @@ export interface Field {
   default?: unknown;
   options?: string[];
   format?: string;
+  tree?: TreeMeta;
 }
 
 export interface EndpointMeta {

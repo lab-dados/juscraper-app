@@ -89,11 +89,32 @@ export function TreeSelect({
     return m;
   }, [nodes]);
 
-  const hasChildren = useMemo(() => {
-    const s = new Set<string>();
-    for (const n of nodes) if (n.pai != null) s.add(n.pai);
-    return s;
+  const childrenByParent = useMemo(() => {
+    const m = new Map<string, TreeNode[]>();
+    for (const n of nodes) {
+      if (n.pai == null) continue;
+      const a = m.get(n.pai);
+      if (a) a.push(n);
+      else m.set(n.pai, [n]);
+    }
+    return m;
   }, [nodes]);
+
+  // Para cada no, os IDs selecionaveis na sua subarvore (inclusive ele mesmo).
+  // Marcar/desmarcar um pai cascateia para todos esses IDs. Como os nos vem em
+  // ordem DFS (pai antes dos filhos), iterar de tras pra frente garante que os
+  // filhos ja estao computados ao montar o pai.
+  const selSubtree = useMemo(() => {
+    const m = new Map<string, string[]>();
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const n = nodes[i];
+      const acc: string[] = n.sel ? [n.id] : [];
+      const kids = childrenByParent.get(n.id);
+      if (kids) for (const k of kids) for (const id of m.get(k.id) ?? []) acc.push(id);
+      m.set(n.id, acc);
+    }
+    return m;
+  }, [nodes, childrenByParent]);
 
   // Lista achatada visivel (em ordem DFS, que e a ordem do proprio array).
   const visible = useMemo(() => {
@@ -137,10 +158,14 @@ export function TreeSelect({
       return next;
     });
 
-  const toggleSelect = (id: string) => {
+  // Marca/desmarca o no e TODA a sua subarvore selecionavel (comportamento do
+  // eSAJ: marcar o pai marca os filhos). Se ja esta tudo marcado, desmarca tudo.
+  const toggleSubtree = (id: string) => {
+    const ids = selSubtree.get(id) ?? [];
+    if (ids.length === 0) return;
     const next = new Set(selected);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
+    const allOn = ids.every((x) => next.has(x));
+    for (const x of ids) (allOn ? next.delete(x) : next.add(x));
     onChange([...next]);
   };
 
@@ -150,27 +175,37 @@ export function TreeSelect({
     <div>
       <label className="label">{label}</label>
 
-      {/* Chips dos selecionados */}
+      {/* Selecionados: chips quando poucos, resumo quando muitos */}
       {chips.length > 0 && (
-        <div className="mb-2 flex flex-wrap gap-1.5">
-          {chips.map((c) => (
-            <span
-              key={c.id}
-              className="inline-flex items-center gap-1 rounded-full bg-fgv-100 px-2 py-0.5 text-xs text-fgv-800"
-            >
-              <span className="max-w-[18rem] truncate" title={`${c.nome} (${c.id})`}>
-                {c.nome}
-              </span>
-              <button
-                type="button"
-                className="text-fgv-400 hover:text-rose-600"
-                onClick={() => toggleSelect(c.id)}
-                aria-label={`Remover ${c.nome}`}
+        <div className="mb-2 flex flex-wrap items-center gap-1.5">
+          {chips.length <= 8 ? (
+            chips.map((c) => (
+              <span
+                key={c.id}
+                className="inline-flex items-center gap-1 rounded-full bg-fgv-100 px-2 py-0.5 text-xs text-fgv-800"
               >
-                &times;
-              </button>
+                <span className="max-w-[18rem] truncate" title={`${c.nome} (${c.id})`}>
+                  {c.nome}
+                </span>
+                <button
+                  type="button"
+                  className="text-fgv-400 hover:text-rose-600"
+                  onClick={() => {
+                    const next = new Set(selected);
+                    next.delete(c.id);
+                    onChange([...next]);
+                  }}
+                  aria-label={`Remover ${c.nome}`}
+                >
+                  &times;
+                </button>
+              </span>
+            ))
+          ) : (
+            <span className="rounded-full bg-fgv-100 px-2 py-0.5 text-xs text-fgv-800">
+              {chips.length} itens selecionados
             </span>
-          ))}
+          )}
           <button
             type="button"
             className="text-xs text-fgv-400 underline hover:text-fgv-700"
@@ -261,8 +296,12 @@ export function TreeSelect({
                     <div style={{ transform: `translateY(${start * ROW_H}px)` }}>
                       {slice.map((n) => {
                         const depth = n.nivel - 1;
-                        const expandable = hasChildren.has(n.id);
+                        const expandable = childrenByParent.has(n.id);
                         const isOpen = expanded.has(n.id) || Boolean(dquery);
+                        const sub = selSubtree.get(n.id) ?? [];
+                        const onCount = sub.reduce((c, x) => c + (selected.has(x) ? 1 : 0), 0);
+                        const checked = sub.length > 0 && onCount === sub.length;
+                        const indeterminate = onCount > 0 && onCount < sub.length;
                         return (
                           <div
                             key={`${n.id}-${n.pai ?? "r"}`}
@@ -281,20 +320,23 @@ export function TreeSelect({
                             ) : (
                               <span className="w-4 shrink-0" />
                             )}
-                            {n.sel ? (
+                            {sub.length > 0 ? (
                               <input
                                 type="checkbox"
                                 className="h-3.5 w-3.5 shrink-0 rounded border-fgv-300 text-fgv-700"
-                                checked={selected.has(n.id)}
-                                onChange={() => toggleSelect(n.id)}
+                                checked={checked}
+                                ref={(el) => {
+                                  if (el) el.indeterminate = indeterminate;
+                                }}
+                                onChange={() => toggleSubtree(n.id)}
                               />
                             ) : (
                               <span className="w-3.5 shrink-0" />
                             )}
                             <span
-                              className={`truncate ${n.sel ? "cursor-pointer text-fgv-800" : "text-fgv-500"}`}
+                              className="cursor-pointer truncate text-fgv-800"
                               title={`${n.nome} (${n.id})`}
-                              onClick={() => (n.sel ? toggleSelect(n.id) : expandable && toggleExpand(n.id))}
+                              onClick={() => (expandable ? toggleExpand(n.id) : toggleSubtree(n.id))}
                             >
                               {n.nome}
                             </span>

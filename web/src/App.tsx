@@ -42,6 +42,7 @@ export default function App() {
   const [values, setValues] = useState<FormValues>({});
 
   const [phase, setPhase] = useState<Phase>("form");
+  const [configOpen, setConfigOpen] = useState(true);
   const [count, setCount] = useState<CountResult | null>(null);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [result, setResult] = useState<RunResult | null>(null);
@@ -71,6 +72,7 @@ export default function App() {
   useEffect(() => {
     setValues(initialValues(fields));
     setPhase("form");
+    setConfigOpen(true);
     setResult(null);
     setError(null);
     setCount(null);
@@ -114,6 +116,7 @@ export default function App() {
   async function handleConfirm(paginas: number | null) {
     if (!clientRef.current || !sigla) return;
     setPhase("running");
+    setConfigOpen(false);
     setProgress({ done: 0, total: paginas ?? count?.n_pags ?? 0 });
     const res = await clientRef.current
       .run(sigla, endpoint, values, paginas, (done, total) => setProgress({ done, total }))
@@ -137,6 +140,7 @@ export default function App() {
         params: values,
       });
       setPhase("form");
+      setConfigOpen(true);
       return;
     }
     track("busca", { tribunal: sigla, endpoint, paginas: paginas ?? 0, linhas: res.n_rows });
@@ -170,42 +174,78 @@ export default function App() {
           </div>
         )}
 
-        <div className="card p-5">
-          <SearchTabs value={endpoint} onChange={setEndpoint} />
-          <div className="mt-5 space-y-5">
-            <TribunalSelect courts={meta.courts} endpoint={endpoint} value={sigla} onChange={setSigla} />
+        <div className="card">
+          <button
+            type="button"
+            onClick={() => setConfigOpen((o) => !o)}
+            aria-expanded={configOpen}
+            className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
+          >
+            <div className="min-w-0">
+              <h2 className="text-sm font-semibold text-fgv-800">Configurações da busca</h2>
+              {!configOpen && (
+                <p className="mt-0.5 truncate text-xs text-fgv-500">
+                  {sigla
+                    ? `${sigla.toUpperCase()} · ${meta.endpoint_labels[endpoint]}`
+                    : "Configure o tribunal e os filtros"}
+                </p>
+              )}
+            </div>
+            <svg
+              className={`h-5 w-5 flex-shrink-0 text-fgv-400 transition-transform ${
+                configOpen ? "rotate-180" : ""
+              }`}
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
 
-            {court && fields.length > 0 && (
-              <>
-                <DynamicForm fields={fields} values={values} onChange={setValues} sigla={sigla ?? ""} />
-                <div className="flex items-center gap-3">
-                  <button
-                    className="btn-primary"
-                    disabled={!canRun || phase === "counting"}
-                    onClick={handleCalcular}
-                  >
-                    {phase === "counting" ? "Calculando…" : "Calcular e estimar"}
-                  </button>
-                  {boot === "loading" && (
-                    <span className="text-sm text-fgv-400">Aguarde o Python carregar…</span>
-                  )}
-                </div>
-                {sigla && (
-                  <CodePreview
-                    code={buildCode({ sigla, endpoint, params: values, paginas: null })}
-                    sigla={sigla}
-                    endpoint={endpoint}
-                  />
+          {configOpen && (
+            <div className="border-t border-fgv-100 px-5 pb-5 pt-4">
+              <SearchTabs value={endpoint} onChange={setEndpoint} />
+              <div className="mt-5 space-y-5">
+                <TribunalSelect courts={meta.courts} endpoint={endpoint} value={sigla} onChange={setSigla} />
+
+                {court && fields.length > 0 && (
+                  <>
+                    <DynamicForm fields={fields} values={values} onChange={setValues} sigla={sigla ?? ""} />
+                    <div className="flex items-center gap-3">
+                      <button
+                        className="btn-primary"
+                        disabled={!canRun || phase === "counting"}
+                        onClick={handleCalcular}
+                      >
+                        {phase === "counting" ? "Calculando…" : "Calcular e estimar"}
+                      </button>
+                      {boot === "loading" && (
+                        <span className="text-sm text-fgv-400">Aguarde o Python carregar…</span>
+                      )}
+                    </div>
+                    {sigla && (
+                      <CodePreview
+                        code={buildCode({ sigla, endpoint, params: values, paginas: null })}
+                        sigla={sigla}
+                        endpoint={endpoint}
+                      />
+                    )}
+                  </>
                 )}
-              </>
-            )}
 
-            {court && fields.length === 0 && (
-              <p className="text-sm text-fgv-500">
-                Este tribunal não oferece {meta.endpoint_labels[endpoint]} no juscraper.
-              </p>
-            )}
-          </div>
+                {court && fields.length === 0 && (
+                  <p className="text-sm text-fgv-500">
+                    Este tribunal não oferece {meta.endpoint_labels[endpoint]} no juscraper.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {phase === "running" && (

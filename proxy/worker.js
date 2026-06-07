@@ -232,6 +232,14 @@ async function handle(request, env) {
     if (["content-encoding", "content-length", "transfer-encoding", "set-cookie", "connection"].includes(lk)) {
       continue;
     }
+    // Descarta os CORS do upstream: alguns tribunais (ex.: a API do TJES) ecoam
+    // o proprio `Access-Control-Allow-Origin` (as vezes um origin de dev como
+    // http://127.0.0.1:5173) + `Allow-Credentials: true`. Se copiados, eles
+    // sobrescrevem o nosso `Access-Control-Allow-Origin: *` e o navegador bloqueia
+    // a resposta (net::ERR_FAILED / "Failed to fetch"). O nosso CORS sempre vence.
+    if (lk.startsWith("access-control-")) {
+      continue;
+    }
     outHeaders.set(key, value);
   }
   if (collectedSetCookies.length) {

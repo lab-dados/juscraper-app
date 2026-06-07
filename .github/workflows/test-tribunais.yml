@@ -1,0 +1,56 @@
+name: Testar tribunais (proxy)
+
+# Roda o juscraper de cada tribunal PELO PROXY CORS (mesmo caminho de rede do app
+# publicado) e reporta, por tribunal/endpoint, quais estao funcionando. Serve de
+# monitor de regressoes: se um tribunal cair (mudanca no site, quebra no proxy),
+# a execucao agendada falha e o resumo mostra exatamente qual.
+
+on:
+  schedule:
+    - cron: "30 9 * * *" # diariamente, 09:30 UTC (~06:30 BRT)
+  workflow_dispatch:
+    inputs:
+      proxy_url:
+        description: "URL do proxy CORS (default: proxy de producao)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-tribunais
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Override manual via workflow_dispatch; vazio -> default do proxy_session.py.
+      JUSCRAPER_PROXY_URL: ${{ github.event.inputs.proxy_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+      - name: Sincronizar dependencias (com dev)
+        run: uv sync --group dev
+      - name: Rodar testes dos tribunais
+        id: pytest
+        # Nao aborta o job no primeiro fail: queremos o relatorio completo.
+        continue-on-error: true
+        run: uv run pytest tests/ -v --junitxml=report.xml
+      - name: Resumo por tribunal
+        if: always()
+        run: uv run python scripts/junit_summary.py report.xml >> "$GITHUB_STEP_SUMMARY"
+      - name: Publicar report.xml
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-tribunais
+          path: report.xml
+      - name: Falhar se algum tribunal supported quebrou
+        if: always() && steps.pytest.outcome == 'failure'
+        run: |
+          echo "::error::Um ou mais tribunais falharam. Veja o resumo do job."
+          exit 1

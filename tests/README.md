@@ -26,6 +26,20 @@ Política por status de suporte (definido em `scripts/gen_courts_meta.py`):
 
 ## Rodar localmente
 
+> **Importante — use o wheel vendorizado.** O app carrega o juscraper do wheel em
+> `web/public/wheels/` (build do git HEAD), que pode **divergir do PyPI mesmo com a
+> mesma versão**. O `.venv` do `uv sync` instala o juscraper do PyPI, então rodar os
+> testes assim pode dar falso resultado (ex.: o TJPE passa no app mas falhava na
+> versão do PyPI). Para refletir o app, reinstale o juscraper a partir do wheel:
+>
+> ```bash
+> uv sync --group dev
+> WHEEL=$(python -c "import json;print(json.load(open('web/public/wheels/manifest.json'))['wheel'])")
+> uv pip install --no-deps --reinstall "web/public/wheels/$WHEEL"
+> ```
+>
+> O workflow de CI já faz esse passo automaticamente.
+
 ```bash
 # instala dev deps (pytest) no .venv gerenciado pelo uv
 uv sync --group dev

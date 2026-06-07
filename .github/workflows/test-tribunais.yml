@@ -35,6 +35,14 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Sincronizar dependencias (com dev)
         run: uv sync --group dev
+      - name: Instalar juscraper do wheel vendorizado (mesmo codigo do app)
+        # O app carrega o juscraper do wheel em web/public/wheels/ (build do git
+        # HEAD), que pode divergir do PyPI mesmo com a mesma versao. Testar contra
+        # o wheel evita falsos resultados (ex.: tjpe passa no app mas falhava no PyPI).
+        run: |
+          WHEEL=$(python -c "import json;print(json.load(open('web/public/wheels/manifest.json'))['wheel'])")
+          echo "Instalando web/public/wheels/$WHEEL"
+          uv pip install --no-deps --reinstall "web/public/wheels/$WHEEL"
       - name: Rodar testes dos tribunais
         id: pytest
         # Nao aborta o job no primeiro fail: queremos o relatorio completo.

@@ -40,7 +40,7 @@ jobs:
         # HEAD), que pode divergir do PyPI mesmo com a mesma versao. Testar contra
         # o wheel evita falsos resultados (ex.: tjpe passa no app mas falhava no PyPI).
         run: |
-          WHEEL=$(python -c "import json;print(json.load(open('web/public/wheels/manifest.json'))['wheel'])")
+          WHEEL=$(uv run python -c "import json;print(json.load(open('web/public/wheels/manifest.json'))['wheel'])")
           echo "Instalando web/public/wheels/$WHEEL"
           uv pip install --no-deps --reinstall "web/public/wheels/$WHEEL"
       - name: Rodar testes dos tribunais

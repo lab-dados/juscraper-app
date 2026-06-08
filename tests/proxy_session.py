@@ -41,7 +41,10 @@ FORBIDDEN = {
 
 
 def proxy_url() -> str:
-    return os.environ.get("JUSCRAPER_PROXY_URL", DEFAULT_PROXY_URL).rstrip("/")
+    # `or` (e nao o default do .get): em runs agendadas do CI a env e setada como
+    # string VAZIA (github.event.inputs.proxy_url nao existe sem workflow_dispatch),
+    # e "" deve cair no default, nao virar um proxy vazio -> Invalid URL ''.
+    return (os.environ.get("JUSCRAPER_PROXY_URL") or DEFAULT_PROXY_URL).rstrip("/")
 
 
 def _parse_set_cookie(raw: str) -> list[tuple[str, str]]:

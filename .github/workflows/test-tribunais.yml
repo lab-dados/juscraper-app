@@ -45,7 +45,11 @@ jobs:
           uv pip install --no-deps --reinstall "web/public/wheels/$WHEEL"
       - name: Rodar testes dos tribunais
         id: pytest
-        # Nao aborta o job no primeiro fail: queremos o relatorio completo.
+        # Monitor (nao-gate): bater em 25 sites de tribunais ao vivo produz 5xx/403
+        # transitorios em qualquer dia. Falhar o job nisso vira ruido (email vermelho
+        # diario por blip de servidor). O valor esta no RESUMO por tribunal abaixo e
+        # no report.xml. `continue-on-error` deixa o job verde; o status real de cada
+        # tribunal aparece na tabela do Summary. Para gating/alerta, ver nota no README.
         continue-on-error: true
         run: uv run pytest tests/ -v --junitxml=report.xml
       - name: Resumo por tribunal
@@ -57,8 +61,3 @@ jobs:
         with:
           name: report-tribunais
           path: report.xml
-      - name: Falhar se algum tribunal supported quebrou
-        if: always() && steps.pytest.outcome == 'failure'
-        run: |
-          echo "::error::Um ou mais tribunais falharam. Veja o resumo do job."
-          exit 1

@@ -22,6 +22,20 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "pytest>=8.0",
+    # Deps de runtime do juscraper. Como o CI instala o wheel vendorizado com
+    # --no-deps (ver .github/workflows/test-tribunais.yml), o ambiente de teste
+    # precisa prover as mesmas libs que o app injeta no Pyodide (web/src/pyodide/
+    # glue.py::_DEPS) — em especial o lxml, que o parser de varios tribunais exige.
+    "pandas",
+    "beautifulsoup4",
+    "lxml",
+    "requests",
+    "pydantic",
+    "tqdm",
+    "Unidecode",
+    "pyjwt",
+    "python-dotenv",
+    "openpyxl",
 ]
 
 [tool.pytest.ini_options]

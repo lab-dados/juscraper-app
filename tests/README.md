@@ -26,6 +26,20 @@ Política por status de suporte (definido em `scripts/gen_courts_meta.py`):
 
 ## Rodar localmente
 
+> **Importante — use o wheel vendorizado.** O app carrega o juscraper do wheel em
+> `web/public/wheels/` (build do git HEAD), que pode **divergir do PyPI mesmo com a
+> mesma versão**. O `.venv` do `uv sync` instala o juscraper do PyPI, então rodar os
+> testes assim pode dar falso resultado (ex.: o TJPE passa no app mas falhava na
+> versão do PyPI). Para refletir o app, reinstale o juscraper a partir do wheel:
+>
+> ```bash
+> uv sync --group dev
+> WHEEL=$(python -c "import json;print(json.load(open('web/public/wheels/manifest.json'))['wheel'])")
+> uv pip install --no-deps --reinstall "web/public/wheels/$WHEEL"
+> ```
+>
+> O workflow de CI já faz esse passo automaticamente.
+
 ```bash
 # instala dev deps (pytest) no .venv gerenciado pelo uv
 uv sync --group dev
@@ -49,4 +63,12 @@ JUSCRAPER_PROXY_URL=http://localhost:8787 uv run pytest tests/ -v
 
 `.github/workflows/test-tribunais.yml` roda a suíte diariamente (e sob demanda via
 *workflow_dispatch*, com opção de informar outro proxy). A cada execução, um resumo
-por tribunal aparece no *Summary* do job (gerado por `scripts/junit_summary.py`).
+por tribunal aparece no *Summary* do job (gerado por `scripts/junit_summary.py`), e o
+`report.xml` é publicado como artefato.
+
+**É um monitor, não um gate.** Bater em ~25 sites de tribunais ao vivo gera 5xx/403
+transitórios em qualquer dia; falhar o job nisso seria só ruído. Por isso o passo do
+pytest usa `continue-on-error: true` — **o job fica verde** e o estado real de cada
+tribunal aparece na tabela do *Summary*. Para transformar em gate (falhar quando algum
+`supported` quebrar), remova o `continue-on-error` ou adicione um passo final que sai
+com erro quando `steps.pytest.outcome == 'failure'`.

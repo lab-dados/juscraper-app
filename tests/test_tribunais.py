@@ -25,6 +25,16 @@ from conftest import endpoint_cases
 
 TERMO_BUSCA = "dano moral"
 
+# Tribunais quebrados por causa do PROPRIO tribunal/juscraper (NAO do app/proxy),
+# confirmado rodando direto e via proxy com o wheel que o app usa. Marcados xfail
+# para o CI ter baseline verde; se recuperarem, viram xpass (visivel). Issues:
+KNOWN_BROKEN: dict[tuple[str, str], str] = {
+    ("tjrj", "cjsg"): "upstream www3.tjrj.jus.br da HTTP 500 no POST do form "
+                      "(jtrecenti/juscraper#278)",
+    ("tjap", "cjsg"): "API do TJAP responde 'A verificacao de seguranca falhou' "
+                      "(jtrecenti/juscraper#279)",
+}
+
 
 def _case_id(case: tuple[str, str, str]) -> str:
     sigla, endpoint, _status = case
@@ -43,6 +53,9 @@ def test_tribunal_endpoint(case: tuple[str, str, str], request: pytest.FixtureRe
             pytest.mark.xfail(reason=f"{sigla} e experimental (pode falhar pelo proxy)",
                               strict=False)
         )
+    broken = KNOWN_BROKEN.get((sigla, endpoint))
+    if broken:
+        request.node.add_marker(pytest.mark.xfail(reason=broken, strict=False))
 
     scraper = jus.scraper(sigla)
     df = getattr(scraper, endpoint)(pesquisa=TERMO_BUSCA, paginas=1)

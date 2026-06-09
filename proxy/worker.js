@@ -189,17 +189,24 @@ async function handle(request, env) {
   const bodyBuffer = hasBody ? await request.arrayBuffer() : undefined;
 
   let method = request.method;
+  // `sendBody` muda ao longo dos redirects: quando um 301/302/303 converte o
+  // metodo para GET, o body PRECISA ser descartado (GET/HEAD nao podem ter body —
+  // o fetch lanca TypeError). Sem isso, tribunais que redirecionam um POST
+  // (ex.: TJSC eproc -> eprocwebcon) quebravam com 502. Ver redirect abaixo.
+  let sendBody = hasBody ? bodyBuffer : undefined;
   let currentUrl = target;
   let finalResp = null;
 
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
     const headers = buildUpstreamHeaders(request, jar, ua);
+    // Sem body, nao faz sentido (e atrapalha) mandar Content-Type do POST original.
+    if (sendBody === undefined) headers.delete("content-type");
     let resp;
     try {
       resp = await fetch(currentUrl, {
         method,
         headers,
-        body: hasBody ? bodyBuffer : undefined,
+        body: sendBody,
         redirect: "manual",
       });
     } catch (err) {
@@ -218,7 +225,10 @@ async function handle(request, env) {
     if (isRedirect && hop < MAX_REDIRECTS) {
       currentUrl = new URL(resp.headers.get("location"), currentUrl).toString();
       // Redirects 301/302/303 viram GET (semantica de navegador); 307/308 preservam.
-      if (resp.status !== 307 && resp.status !== 308) method = "GET";
+      if (resp.status !== 307 && resp.status !== 308) {
+        method = "GET";
+        sendBody = undefined; // GET/HEAD nao podem ter body
+      }
       continue;
     }
     finalResp = resp;

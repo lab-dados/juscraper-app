@@ -26,6 +26,14 @@ E o proxy devolve:
 O proxy segue redirects manualmente, acumulando cookies na cadeia, para imitar o
 `requests.Session`.
 
+Os demais cabeçalhos (ex.: `Content-Type`, `Authorization`), o método e o corpo
+são repassados como vieram. É assim que a aba **Processos (DataJud)** chama a
+API pública do CNJ, que é um `POST` com corpo JSON e
+`Authorization: APIKey <chave pública>`. Como o curinga `*` em
+`Access-Control-Allow-Headers` **não** cobre `Authorization` (especificação do
+Fetch), o Worker lista esse cabeçalho explicitamente (`*, Authorization`).
+Mudanças nesse cabeçalho só valem depois de `npx wrangler deploy`.
+
 ## Deploy (free tier)
 
 ```bash

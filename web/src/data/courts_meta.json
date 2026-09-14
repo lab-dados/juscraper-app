@@ -2,7 +2,8 @@
   "juscraper_version": "0.3.0",
   "endpoint_labels": {
     "cjsg": "Jurisprudencia (2o grau)",
-    "cjpg": "Banco de Sentencas (1o grau)"
+    "cjpg": "Banco de Sentencas (1o grau)",
+    "datajud": "Processos (DataJud)"
   },
   "courts": [
     {
@@ -3231,5 +3232,511 @@
         "reason": ""
       }
     }
-  ]
+  ],
+  "datajud": {
+    "fields": [
+      {
+        "name": "data_ajuizamento_inicio",
+        "label": "Ajuizamento: de",
+        "required": false,
+        "advanced": false,
+        "help": "Data de ajuizamento (distribuição) do processo.",
+        "type": "isodate",
+        "format": "AAAA-MM-DD",
+        "default": ""
+      },
+      {
+        "name": "data_ajuizamento_fim",
+        "label": "Ajuizamento: até",
+        "required": false,
+        "advanced": false,
+        "help": null,
+        "type": "isodate",
+        "format": "AAAA-MM-DD",
+        "default": ""
+      },
+      {
+        "name": "classe",
+        "label": "Classe processual (TPU/CNJ)",
+        "required": false,
+        "advanced": false,
+        "help": "Uma classe da Tabela Processual Unificada do CNJ. Ex.: Usucapião (49).",
+        "type": "tree",
+        "default": [],
+        "tree": {
+          "endpoint": "datajud",
+          "campo": "classe",
+          "multiple": false,
+          "file": "tpu.classes.json"
+        },
+        "help_url": "https://www.cnj.jus.br/sgt/consulta_publica_classes.php"
+      },
+      {
+        "name": "assunto",
+        "label": "Assuntos (TPU/CNJ)",
+        "required": false,
+        "advanced": false,
+        "help": "Traz processos com pelo menos um dos assuntos marcados. Marcar um assunto marca também os assuntos filhos.",
+        "type": "tree",
+        "default": [],
+        "tree": {
+          "endpoint": "datajud",
+          "campo": "assunto",
+          "multiple": true,
+          "file": "tpu.assuntos.json"
+        },
+        "help_url": "https://www.cnj.jus.br/sgt/consulta_publica_assuntos.php"
+      },
+      {
+        "name": "orgao_julgador",
+        "label": "Órgão julgador (nome)",
+        "required": false,
+        "advanced": false,
+        "help": "Busca pelo nome, como aparece no DataJud (ex.: 02 CUMULATIVA DE PERUIBE).",
+        "type": "text",
+        "default": ""
+      },
+      {
+        "name": "tipos_movimentacao",
+        "label": "Com movimentação do tipo",
+        "required": false,
+        "advanced": false,
+        "help": "Traz só processos com pelo menos uma movimentação dessas categorias.",
+        "type": "multiselect",
+        "default": [],
+        "options": [
+          "decisao",
+          "julgamento",
+          "sentenca",
+          "transito_julgado",
+          "tutela"
+        ],
+        "option_labels": {
+          "decisao": "Decisão",
+          "julgamento": "Julgamento",
+          "sentenca": "Sentença",
+          "transito_julgado": "Trânsito em julgado",
+          "tutela": "Tutela provisória"
+        }
+      },
+      {
+        "name": "mostrar_movs",
+        "label": "Incluir movimentações (datas, códigos e nomes)",
+        "required": false,
+        "advanced": false,
+        "help": "Necessário para calcular durações (ex.: do ajuizamento até a sentença). Deixa o download mais lento.",
+        "type": "checkbox",
+        "default": false
+      },
+      {
+        "name": "ano_ajuizamento",
+        "label": "Ano de ajuizamento",
+        "required": false,
+        "advanced": true,
+        "help": "Atalho para o ano inteiro. Use o ano OU o intervalo de datas, não os dois.",
+        "type": "number",
+        "default": ""
+      },
+      {
+        "name": "movimentos_codigo",
+        "label": "Com movimentação de código (TPU/CNJ)",
+        "required": false,
+        "advanced": true,
+        "help": "Códigos de movimento da TPU. Somam-se aos tipos marcados acima.",
+        "type": "tree",
+        "default": [],
+        "tree": {
+          "endpoint": "datajud",
+          "campo": "movimentos_codigo",
+          "multiple": true,
+          "file": "tpu.movimentos.json"
+        },
+        "value_type": "int",
+        "help_url": "https://www.cnj.jus.br/sgt/consulta_publica_movimentos.php"
+      },
+      {
+        "name": "numero_processo",
+        "label": "Números de processo (CNJ)",
+        "required": false,
+        "advanced": true,
+        "help": "Restringe a uma lista de processos (números CNJ separados por vírgula).",
+        "type": "list",
+        "default": []
+      }
+    ],
+    "tribunais": [
+      {
+        "sigla": "TJAC",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJAL",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJAM",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJAP",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJBA",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJCE",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJDFT",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJES",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJGO",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJMA",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJMG",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJMS",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJMT",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJPA",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJPB",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJPE",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJPI",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJPR",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJRJ",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJRN",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJRO",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJRR",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJRS",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJSC",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJSE",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJSP",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TJTO",
+        "grupo": "Justiça Estadual"
+      },
+      {
+        "sigla": "TRF1",
+        "grupo": "Justiça Federal"
+      },
+      {
+        "sigla": "TRF2",
+        "grupo": "Justiça Federal"
+      },
+      {
+        "sigla": "TRF3",
+        "grupo": "Justiça Federal"
+      },
+      {
+        "sigla": "TRF4",
+        "grupo": "Justiça Federal"
+      },
+      {
+        "sigla": "TRF5",
+        "grupo": "Justiça Federal"
+      },
+      {
+        "sigla": "TRF6",
+        "grupo": "Justiça Federal"
+      },
+      {
+        "sigla": "TRT1",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT2",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT3",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT4",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT5",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT6",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT7",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT8",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT9",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT10",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT11",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT12",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT13",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT14",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT15",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT16",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT17",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT18",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT19",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT20",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT21",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT22",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT23",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRT24",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TST",
+        "grupo": "Justiça do Trabalho"
+      },
+      {
+        "sigla": "TRE-AC",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-AL",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-AM",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-AP",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-BA",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-CE",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-DFT",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-ES",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-GO",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-MA",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-MG",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-MS",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-MT",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-PA",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-PB",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-PE",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-PI",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-PR",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-RJ",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-RN",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-RO",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-RR",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-RS",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-SC",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-SE",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-SP",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TRE-TO",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "TSE",
+        "grupo": "Justiça Eleitoral"
+      },
+      {
+        "sigla": "STM",
+        "grupo": "Justiça Militar"
+      },
+      {
+        "sigla": "TJMMG",
+        "grupo": "Justiça Militar"
+      },
+      {
+        "sigla": "TJMRS",
+        "grupo": "Justiça Militar"
+      },
+      {
+        "sigla": "TJMSP",
+        "grupo": "Justiça Militar"
+      },
+      {
+        "sigla": "CNJ",
+        "grupo": "Tribunais superiores e CNJ"
+      },
+      {
+        "sigla": "STF",
+        "grupo": "Tribunais superiores e CNJ"
+      },
+      {
+        "sigla": "STJ",
+        "grupo": "Tribunais superiores e CNJ"
+      }
+    ]
+  }
 }

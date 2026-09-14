@@ -12,17 +12,21 @@ export function ResultsTable({
   sigla,
   endpoint,
   code,
+  filePrefix,
 }: {
   result: RunResult;
   sigla: string;
   endpoint: string;
   code: string;
+  // Nome base dos arquivos baixados (default: <sigla>_<endpoint>).
+  filePrefix?: string;
 }) {
   const [tab, setTab] = useState<"tabela" | "codigo">("tabela");
   const [filter, setFilter] = useState("");
   const [sortCol, setSortCol] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(0);
+  const base = filePrefix ?? `${sigla}_${endpoint}`;
 
   const filtered = useMemo(() => {
     const q = filter.trim().toLowerCase();
@@ -83,6 +87,17 @@ export function ResultsTable({
         <CodeView code={code} sigla={sigla} endpoint={endpoint} />
       ) : (
         <>
+          {result.avisos && result.avisos.length > 0 && (
+            <div className="border-b border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800">
+              <p className="font-semibold">Atenção: a fonte devolveu avisos durante o download.</p>
+              <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                {result.avisos.map((a, i) => (
+                  <li key={i}>{a}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="flex flex-wrap items-center justify-end gap-2 border-b border-fgv-100 p-3">
             <input
               className="input mr-auto w-56"
@@ -97,7 +112,7 @@ export function ResultsTable({
               className="btn-secondary"
               onClick={() => {
                 track("download", { formato: "csv", tribunal: sigla, endpoint });
-                downloadText(`${sigla}_${endpoint}.csv`, result.csv);
+                downloadText(`${base}.csv`, result.csv);
               }}
             >
               ⬇ CSV
@@ -106,12 +121,34 @@ export function ResultsTable({
               className="btn-primary"
               onClick={() => {
                 track("download", { formato: "xlsx", tribunal: sigla, endpoint });
-                downloadBase64(`${sigla}_${endpoint}.xlsx`, result.xlsx_b64, XLSX_MIME);
+                downloadBase64(`${base}.xlsx`, result.xlsx_b64, XLSX_MIME);
               }}
             >
               ⬇ XLSX
             </button>
           </div>
+
+          {result.extras?.map((extra) => (
+            <div
+              key={extra.key}
+              className="flex flex-wrap items-center justify-between gap-2 border-b border-fgv-100 bg-fgv-50/60 px-3 py-2"
+            >
+              <p className="text-sm text-fgv-600">
+                <span className="font-medium text-fgv-800">{extra.label}</span> ·{" "}
+                {extra.n_rows.toLocaleString("pt-BR")} linha(s)
+              </p>
+              <button
+                className="btn-secondary"
+                disabled={extra.n_rows === 0}
+                onClick={() => {
+                  track("download", { formato: `csv_${extra.key}`, tribunal: sigla, endpoint });
+                  downloadText(`${base}_${extra.key}.csv`, extra.csv);
+                }}
+              >
+                ⬇ CSV das movimentações
+              </button>
+            </div>
+          ))}
 
           <div className="max-h-[60vh] overflow-auto">
             <table className="w-full border-collapse text-sm">

@@ -9,19 +9,23 @@ interface Tab {
 const TABS: Tab[] = [
   { key: "cjsg", label: "Jurisprudência (2º grau)" },
   { key: "cjpg", label: "Banco de Sentenças (1º grau)" },
+  { key: "datajud", label: "Processos (DataJud)" },
   { key: "soon", label: "Consulta processual", soon: true },
 ];
 
 export function SearchTabs({
   value,
   onChange,
+  hasDatajud = true,
 }: {
   value: Endpoint;
   onChange: (e: Endpoint) => void;
+  // Some a aba se o courts_meta.json nao trouxer os metadados do DataJud.
+  hasDatajud?: boolean;
 }) {
   return (
     <div className="flex flex-wrap gap-1 border-b border-fgv-100">
-      {TABS.map((tab) => {
+      {TABS.filter((tab) => hasDatajud || tab.key !== "datajud").map((tab) => {
         const active = tab.key === value;
         return (
           <button

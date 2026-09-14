@@ -54,12 +54,19 @@ export function TreeSelect({
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [scrollTop, setScrollTop] = useState(0);
 
+  // Selecao unica (ex.: classe do DataJud): marcar um item troca a selecao e
+  // nao cascateia para os filhos.
+  const single = !tree.multiple;
+  // Arvores independentes de tribunal (TPU do CNJ) usam codigos, nao IDs internos.
+  const codigos = Boolean(tree.file);
+
   const selected = useMemo(() => new Set(value), [value]);
 
   // Carrega o JSON da arvore na primeira abertura (lazy).
   useEffect(() => {
     if (!open || state !== "idle") return;
-    const url = `${import.meta.env.BASE_URL}trees/${sigla}.${tree.endpoint}.${tree.campo}.json`;
+    const file = tree.file ?? `${sigla}.${tree.endpoint}.${tree.campo}.json`;
+    const url = `${import.meta.env.BASE_URL}trees/${file}`;
     setState("loading");
     fetch(url)
       .then((r) => {
@@ -75,7 +82,7 @@ export function TreeSelect({
         setState("missing");
         setManual(true);
       });
-  }, [open, state, sigla, tree.endpoint, tree.campo]);
+  }, [open, state, sigla, tree.endpoint, tree.campo, tree.file]);
 
   // Debounce da busca.
   useEffect(() => {
@@ -160,7 +167,13 @@ export function TreeSelect({
 
   // Marca/desmarca o no e TODA a sua subarvore selecionavel (comportamento do
   // eSAJ: marcar o pai marca os filhos). Se ja esta tudo marcado, desmarca tudo.
+  // Em selecao unica, so troca o item marcado.
   const toggleSubtree = (id: string) => {
+    if (single) {
+      if (!byId.get(id)?.sel) return;
+      onChange(selected.has(id) ? [] : [id]);
+      return;
+    }
     const ids = selSubtree.get(id) ?? [];
     if (ids.length === 0) return;
     const next = new Set(selected);
@@ -170,6 +183,7 @@ export function TreeSelect({
   };
 
   const chips = value.map((id) => ({ id, nome: byId.get(id)?.nome ?? id }));
+  const idsWord = codigos ? "codigos" : "IDs internos";
 
   return (
     <div>
@@ -222,7 +236,11 @@ export function TreeSelect({
           className="btn-secondary w-full justify-center text-sm"
           onClick={() => setOpen(true)}
         >
-          {value.length > 0 ? `Selecionar (${value.length} marcado${value.length > 1 ? "s" : ""})` : "Selecionar na arvore"}
+          {value.length > 0
+            ? single
+              ? "Trocar"
+              : `Selecionar (${value.length} marcado${value.length > 1 ? "s" : ""})`
+            : "Selecionar na arvore"}
         </button>
       )}
 
@@ -234,12 +252,14 @@ export function TreeSelect({
             <div className="p-3">
               {state === "missing" && (
                 <p className="mb-1 text-xs text-amber-700">
-                  Arvore indisponivel para este tribunal. Digite os IDs internos separados por virgula.
+                  {codigos
+                    ? "Lista de codigos indisponivel agora. Digite o(s) codigo(s) separados por virgula."
+                    : "Arvore indisponivel para este tribunal. Digite os IDs internos separados por virgula."}
                 </p>
               )}
               <input
                 className="input"
-                placeholder="IDs separados por virgula"
+                placeholder={`${codigos ? "Codigos" : "IDs"} separados por virgula`}
                 value={value.join(", ")}
                 onChange={(e) =>
                   onChange(
@@ -267,7 +287,7 @@ export function TreeSelect({
               <div className="flex items-center gap-2 border-b border-fgv-100 p-2">
                 <input
                   className="input flex-1"
-                  placeholder="Buscar por nome..."
+                  placeholder={codigos ? "Buscar por nome ou codigo..." : "Buscar por nome..."}
                   value={query}
                   onChange={(e) => {
                     setQuery(e.target.value);
@@ -278,9 +298,9 @@ export function TreeSelect({
                   type="button"
                   className="text-xs text-fgv-400 underline hover:text-fgv-700"
                   onClick={() => setManual(true)}
-                  title="Digitar IDs manualmente"
+                  title={`Digitar ${idsWord} manualmente`}
                 >
-                  IDs
+                  {codigos ? "Codigos" : "IDs"}
                 </button>
               </div>
 
@@ -298,7 +318,7 @@ export function TreeSelect({
                         const depth = n.nivel - 1;
                         const expandable = childrenByParent.has(n.id);
                         const isOpen = expanded.has(n.id) || Boolean(dquery);
-                        const sub = selSubtree.get(n.id) ?? [];
+                        const sub = single ? (n.sel ? [n.id] : []) : selSubtree.get(n.id) ?? [];
                         const onCount = sub.reduce((c, x) => c + (selected.has(x) ? 1 : 0), 0);
                         const checked = sub.length > 0 && onCount === sub.length;
                         const indeterminate = onCount > 0 && onCount < sub.length;
@@ -325,6 +345,7 @@ export function TreeSelect({
                                 type="checkbox"
                                 className="h-3.5 w-3.5 shrink-0 rounded border-fgv-300 text-fgv-700"
                                 checked={checked}
+                                aria-label={n.nome}
                                 ref={(el) => {
                                   if (el) el.indeterminate = indeterminate;
                                 }}

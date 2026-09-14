@@ -1,4 +1,5 @@
 // Utilidades pequenas: link de issue no juscraper, download de arquivo, tempo.
+import type { Field } from "../types";
 
 const REPO = "jtrecenti/juscraper";
 
@@ -55,6 +56,16 @@ export function downloadBase64(filename: string, b64: string, mime: string) {
   triggerDownload(new Blob([bytes], { type: mime }), filename);
 }
 
+/** Valor JS -> literal Python. */
+function pyLiteral(v: unknown): string {
+  if (typeof v === "boolean") return v ? "True" : "False";
+  if (typeof v === "number") return String(v);
+  if (Array.isArray(v)) return `[${v.map((x) => pyLiteral(x)).join(", ")}]`;
+  return JSON.stringify(String(v));
+}
+
+const vazio = (v: unknown) => v == null || v === "" || (Array.isArray(v) && v.length === 0);
+
 /** Monta o snippet Python equivalente, para copiar/colar no Colab. */
 export function buildCode(opts: {
   sigla: string;
@@ -64,24 +75,17 @@ export function buildCode(opts: {
 }): string {
   const { sigla, endpoint, params, paginas } = opts;
 
-  const fmt = (v: unknown): string => {
-    if (typeof v === "boolean") return v ? "True" : "False";
-    if (typeof v === "number") return String(v);
-    if (Array.isArray(v)) return `[${v.map((x) => fmt(x)).join(", ")}]`;
-    return JSON.stringify(String(v));
-  };
-
   // pesquisa vai como 1o argumento posicional; demais como keyword.
   const pesquisa = params.pesquisa;
   const kwargs: string[] = [];
   if (paginas != null) kwargs.push(`paginas=range(1, ${paginas + 1})`);
   for (const [k, v] of Object.entries(params)) {
     if (k === "pesquisa") continue;
-    if (v == null || v === "" || (Array.isArray(v) && v.length === 0)) continue;
-    kwargs.push(`${k}=${fmt(v)}`);
+    if (vazio(v)) continue;
+    kwargs.push(`${k}=${pyLiteral(v)}`);
   }
 
-  const firstArg = pesquisa != null && pesquisa !== "" ? fmt(pesquisa) : null;
+  const firstArg = pesquisa != null && pesquisa !== "" ? pyLiteral(pesquisa) : null;
   const args = [firstArg, ...kwargs].filter(Boolean) as string[];
 
   // Sem nenhum argumento ainda (preview do formulario vazio): chamada limpa.
@@ -100,6 +104,122 @@ export function buildCode(opts: {
     "df.to_csv('resultado.csv', index=False)",
     "df.head()",
   ].join("\n");
+}
+
+/**
+ * Converte os valores do formulário para os tipos que o juscraper espera:
+ * árvore de seleção única vira string, campo numérico vira número e listas
+ * marcadas com value_type "int" viram listas de inteiros.
+ */
+export function callParams(fields: Field[], values: Record<string, unknown>): Record<string, unknown> {
+  const byName = new Map(fields.map((f) => [f.name, f]));
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(values)) {
+    const f = byName.get(k);
+    if (f?.type === "tree" && f.tree && !f.tree.multiple) {
+      out[k] = Array.isArray(v) ? (v[0] ?? "") : v;
+    } else if (f?.type === "number") {
+      const s = String(v ?? "").trim();
+      out[k] = s === "" || !Number.isFinite(Number(s)) ? "" : Number(s);
+    } else if (f?.value_type === "int" && Array.isArray(v)) {
+      out[k] = v.map((x) => Number(x)).filter((n) => Number.isFinite(n));
+    } else {
+      out[k] = v;
+    }
+  }
+  return out;
+}
+
+/** Problema de preenchimento na aba DataJud (null = ok). */
+export function datajudProblem(params: Record<string, unknown>): string | null {
+  const ini = String(params.data_ajuizamento_inicio ?? "");
+  const fim = String(params.data_ajuizamento_fim ?? "");
+  if (!vazio(params.ano_ajuizamento) && (ini || fim)) {
+    return "Use o ano de ajuizamento OU o intervalo de datas, não os dois.";
+  }
+  if (ini && fim && ini > fim) return "A data inicial do ajuizamento é posterior à final.";
+  return null;
+}
+
+/**
+ * Código Python da aba DataJud: a chamada ao juscraper + as mesmas tabelas que
+ * o app oferece para download (uma linha por processo e, com movimentações,
+ * uma linha por movimentação).
+ */
+export function buildDatajudCode(opts: {
+  params: Record<string, unknown>;
+  paginas: number | null;
+  tamanhoPagina?: number;
+}): string {
+  const { params, paginas, tamanhoPagina } = opts;
+  const movs = params.mostrar_movs === true;
+  const kwargs: string[] = [];
+  for (const [k, v] of Object.entries(params)) {
+    if (vazio(v) || v === false) continue;
+    kwargs.push(`${k}=${pyLiteral(v)}`);
+  }
+  if (paginas != null) {
+    kwargs.push(`paginas=${paginas}`);
+    if (tamanhoPagina) kwargs.push(`tamanho_pagina=${tamanhoPagina}`);
+  }
+  const call =
+    kwargs.length === 0
+      ? "df = dj.listar_processos()"
+      : ["df = dj.listar_processos(", `    ${kwargs.join(",\n    ")},`, ")"].join("\n");
+
+  const lines = [
+    "# pip install juscraper",
+    "import juscraper as jus",
+    "import pandas as pd",
+    "",
+    'dj = jus.scraper("datajud")',
+    call,
+    "",
+    "",
+    "def data(s):",
+    '    """O DataJud mistura datas ISO (2024-01-30T12:46:42Z) e AAAAMMDDhhmmss."""',
+    '    return pd.to_datetime(s, format="mixed", utc=True, errors="coerce").dt.tz_localize(None)',
+    "",
+    "",
+    "def cnj(s):",
+    '    """20 digitos -> NNNNNNN-DD.AAAA.J.TR.OOOO."""',
+    '    return s.str.replace(r"^(\\d{7})(\\d{2})(\\d{4})(\\d)(\\d{2})(\\d{4})$", r"\\1-\\2.\\3.\\4.\\5.\\6", regex=True)',
+    "",
+    "",
+    "# Uma linha por processo (o mesmo número pode aparecer uma vez por grau)",
+    "processos = pd.DataFrame({",
+    '    "numero_processo": cnj(df["numeroProcesso"]),',
+    '    "grau": df["grau"],',
+    '    "classe_codigo": df["classe"].str["codigo"],',
+    '    "classe_nome": df["classe"].str["nome"],',
+    '    "assuntos_nomes": df["assuntos"].map(',
+    '        lambda xs: "; ".join(a.get("nome", "") for a in xs if isinstance(a, dict))',
+    "        if isinstance(xs, list) else None",
+    "    ),",
+    '    "orgao_julgador_nome": df["orgaoJulgador"].str["nome"],',
+    '    "data_ajuizamento": data(df["dataAjuizamento"]),',
+    "})",
+    "processos.to_csv('processos.csv', index=False)",
+  ];
+  if (movs) {
+    lines.push(
+      "",
+      "# Movimentações em formato longo: uma linha por movimentação",
+      'movs = df[["numeroProcesso", "grau", "movimentos"]].explode("movimentos", ignore_index=True)',
+      'movs = movs.dropna(subset=["movimentos"]).reset_index(drop=True)',
+      "movs = pd.concat([",
+      '    movs[["numeroProcesso", "grau"]],',
+      '    pd.json_normalize(movs["movimentos"].tolist()).reindex(columns=["dataHora", "codigo", "nome"]),',
+      "], axis=1)",
+      'movs.columns = ["numero_processo", "grau", "data_hora", "codigo", "nome"]',
+      'movs["numero_processo"] = cnj(movs["numero_processo"])',
+      'movs["data_hora"] = data(movs["data_hora"])',
+      'movs = movs.sort_values(["numero_processo", "grau", "data_hora"])',
+      "movs.to_csv('movimentacoes.csv', index=False)",
+    );
+  }
+  lines.push("processos.head()");
+  return lines.join("\n");
 }
 
 /** Monta um notebook .ipynb (string JSON) com a busca da pessoa, para o Colab. */

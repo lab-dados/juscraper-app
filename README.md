@@ -1,19 +1,28 @@
 # juscraper-app
 
-App web para baixar **jurisprudência** dos tribunais brasileiros de forma
-interativa, rodando o [`juscraper`](https://github.com/jtrecenti/juscraper)
-**direto no navegador** (via Pyodide). Página estática, sem backend próprio —
+App web para baixar **jurisprudência** e **listas de processos** dos tribunais
+brasileiros de forma interativa, rodando o [`juscraper`](https://github.com/jtrecenti/juscraper)
+**direto no navegador** (via Pyodide). Página estática, sem backend próprio:
 apenas um proxy CORS mínimo para contornar a same-origin policy.
 
-A pessoa escolhe o tipo de busca (**Jurisprudência / 2º grau** = `cjsg`, ou
-**Banco de Sentenças / 1º grau** = `cjpg`) e o tribunal; o formulário de filtros
+A pessoa escolhe o tipo de busca (**Jurisprudência / 2º grau** = `cjsg`,
+**Banco de Sentenças / 1º grau** = `cjpg`, ou **Processos (DataJud)** =
+`datajud.listar_processos`) e o tribunal; o formulário de filtros
 é gerado automaticamente a partir do schema da função do `juscraper`. A
 ferramenta calcula o número de páginas, estima o tempo, pede confirmação, roda
 com barra de progresso e mostra uma tabela interativa com download em CSV. Em
 caso de erro, gera um link pré-preenchido para abrir issue no `juscraper`.
 
-> ⚠️ **A busca é feita ao vivo.** Não há base pré-baixada — cada consulta acessa
-> o site do tribunal na hora. Os dados são processados no seu navegador.
+A aba **Processos (DataJud)** lista processos pela **data de ajuizamento** a
+partir da [API pública do DataJud](https://datajud-wiki.cnj.jus.br/api-publica/)
+(CNJ), inclusive os que ainda não têm decisão. Isso permite desenhos de pesquisa
+**prospectivos** (ex.: "todos os processos de usucapião distribuídos no TJSP em
+2022, e suas movimentações"), enquanto `cjsg`/`cjpg` só alcançam casos já
+decididos.
+
+> ⚠️ **A busca é feita ao vivo.** Não há base pré-baixada: cada consulta acessa
+> o site do tribunal (ou a API do CNJ) na hora. Os dados são processados no seu
+> navegador.
 
 ## Arquitetura
 
@@ -31,18 +40,21 @@ flowchart TB
 
   PX["Cloudflare Worker<br/>proxy CORS + rota /gist"]
   T["Sites dos tribunais<br/>(eSAJ, eproc, ...)"]
+  DJ["API pública do DataJud (CNJ)<br/>POST JSON + Authorization: APIKey"]
   GIST["GitHub Gist → Google Colab"]
   UM["Umami<br/>analytics (sem cookies)"]
 
   GLUE -- "XHR: X-Target-URL, X-Cookie" --> PX
   PX -- "HTTP + cookies" --> T
+  PX -- "POST /&lt;alias&gt;/_search" --> DJ
   UI -- "POST /gist (código da busca)" --> PX
   PX -- "cria gist não listado" --> GIST
   UI -. "eventos: busca, download, ..." .-> UM
 ```
 
-Por que o proxy: o navegador bloqueia requisições diretas aos tribunais (eles
-não mandam cabeçalhos CORS). O proxy só repassa o HTTP e devolve a resposta com
+Por que o proxy: o navegador bloqueia requisições diretas aos tribunais e à API
+do DataJud (eles não mandam cabeçalhos CORS). O proxy só repassa o HTTP (método,
+corpo e cabeçalhos, inclusive `Authorization`) e devolve a resposta com
 `Access-Control-Allow-Origin`. Ver [`proxy/README.md`](proxy/README.md).
 
 ## Como funciona
@@ -51,17 +63,17 @@ não mandam cabeçalhos CORS). O proxy só repassa o HTTP e devolve a resposta c
 
 ```mermaid
 flowchart TD
-  A["Abre o app"] --> B["Escolhe o tipo de busca<br/>Jurisprudência (2º grau) ou Sentenças (1º grau)"]
+  A["Abre o app"] --> B["Escolhe o tipo de busca<br/>Jurisprudência (2º grau), Sentenças (1º grau)<br/>ou Processos (DataJud)"]
   B --> C["Escolhe o tribunal"]
   C --> D["Preenche o formulário de filtros<br/>(gerado do schema do juscraper)"]
   D --> E["Calcular e estimar"]
-  E --> F{"Estimativa:<br/>nº de páginas + tempo"}
+  E --> F{"Estimativa:<br/>nº de páginas (ou de processos) + tempo"}
   F -- "Cancelar" --> D
-  F -- "Confirmar (até 100 páginas)" --> G["Download com barra de progresso"]
-  F -. "precisa de mais de 100?" .-> L["LabDados ou rodar via Colab"]
+  F -- "Confirmar (até 100 páginas;<br/>DataJud: até 5 mil/10 mil processos)" --> G["Download com barra de progresso"]
+  F -. "precisa de mais?" .-> L["LabDados ou rodar via Colab"]
   G -- "sucesso" --> H["Tabela interativa<br/>filtrar · ordenar · paginar"]
   G -- "erro" --> I["Card de erro<br/>link pré-preenchido p/ issue"]
-  H --> J["Baixar CSV / XLSX"]
+  H --> J["Baixar CSV / XLSX<br/>(DataJud: + CSV das movimentações)"]
   H --> K["Aba Código<br/>→ abrir no Colab com a busca"]
 ```
 
@@ -96,9 +108,44 @@ sequenceDiagram
   App-->>U: tabela + downloads
 ```
 
+Na aba DataJud o fluxo é o mesmo, com duas diferenças: a estimativa vem de
+`contar_processos` (uma consulta `size=0` que devolve o total exato) e o
+download usa `listar_processos` com páginas de 1.000 processos (500 com
+movimentações). O glue achata os campos aninhados do CNJ (camelCase) numa
+tabela legível: número CNJ formatado, tribunal, grau, classe (código e nome),
+assuntos, órgão julgador, data de ajuizamento e, com movimentações, a
+quantidade e as datas da primeira e da última. As movimentações também saem
+num segundo CSV em formato longo (uma linha por movimentação:
+`numero_processo`, `grau`, `data_hora`, `codigo`, `nome`, `complementos`), para
+calcular durações (ex.: do ajuizamento até a sentença). As datas do CNJ, que
+vêm em dois formatos (ISO e `AAAAMMDDhhmmss`), saem normalizadas como
+`AAAA-MM-DD hh:mm:ss`.
+
+Cuidados com o DataJud (a aba avisa a pessoa usuária sobre cada um):
+- **A ordem da lista não é aleatória.** A API ordena por um identificador
+  interno que agrupa os processos por vara (e concentra, no começo, registros
+  atípicos, como processos sem movimentação). Por isso a tela de resultados
+  tem um **sorteio de amostra aleatória simples** com semente (gerador
+  mulberry32 sobre a lista em ordem de `id_datajud`, Fisher-Yates parcial):
+  com a mesma lista e a mesma semente, a amostra sai igual. Dá para baixar a
+  amostra e as movimentações dos processos sorteados. Se a lista baixada foi
+  cortada pelo limite, a tela avisa que a amostra não representa o total.
+- **Um registro por grau.** O mesmo número CNJ aparece uma vez por grau (ex.:
+  a execução fiscal no 1º grau e a apelação, classe 198, no 2º); o filtro de
+  classe traz só o registro daquela classe.
+- **Atraso e lacunas.** Os tribunais mandam os dados ao CNJ com atraso de 3 a
+  4 semanas, e o DataJud não traz valor da causa nem partes.
+- **Atalhos de movimentação incompletos.** Os `tipos_movimentacao` do
+  juscraper não cobrem códigos TPU importantes (ex.: "sentença" sem 442/446,
+  segurança concedida/denegada, nem 463, desistência; "tutela" sem 339/792,
+  liminar). O formulário deixa os códigos TPU (`movimentos_codigo`) no
+  formulário principal, com os códigos mais comuns na ajuda.
+
 ### Suporte por tribunal
 - **cjsg**: todos os 25 TJs.
 - **cjpg**: TJES, TJSP, TJTO.
+- **Processos (DataJud)**: todos os índices da API pública mapeados no
+  `juscraper` (TJs, TRFs, TRTs, TREs, justiça militar, STJ, TST, TSE, STM...).
 - **Experimental**: TJCE (TLS customizado pode falhar pelo proxy).
 - **Indisponível no v1**: TJMG (exige resolver captcha de imagem).
 
@@ -107,10 +154,10 @@ sequenceDiagram
 | Caminho | O quê |
 |---------|-------|
 | `web/` | App React/Vite/Tailwind (UI + bridge Pyodide) |
-| `web/src/pyodide/glue.py` | Glue Python: install, roteamento de rede, count/run |
-| `web/src/data/courts_meta.json` | Metadados gerados (campos por tribunal) |
+| `web/src/pyodide/glue.py` | Glue Python: install, roteamento de rede, count/run, achatamento do DataJud |
+| `web/src/data/courts_meta.json` | Metadados gerados (campos por tribunal + seção `datajud`) |
 | `web/public/wheels/` | Wheel do juscraper vendorizado (versionado) |
-| `web/public/trees/` | Árvores de classes/assuntos (eSAJ); **não versionado**, baixado da release no deploy |
+| `web/public/trees/` | Árvores de classes/assuntos (eSAJ e TPU do CNJ); **não versionado**, baixado da release no deploy |
 | `proxy/` | Cloudflare Worker (proxy CORS) |
 | `scripts/gen_courts_meta.py` | Gera `courts_meta.json` a partir dos schemas |
 | `scripts/gen_trees.py` | Gera as árvores em `web/public/trees/` (publicadas na release `trees`) |
@@ -153,27 +200,44 @@ Para atualizar **manualmente** (ou regenerar os metadados localmente):
 ```
 Ou dispare a Action na mão: **Actions > Atualizar juscraper (diário) > Run workflow**.
 
-### Seletor de classes/assuntos (árvores eSAJ)
+> Use o Python do `.venv` direto (ou `uv run --no-sync`). O `uv run` comum
+> ressincroniza o ambiente pelo `uv.lock` e troca o wheel vendorizado pelo
+> `juscraper` do PyPI, o que gera metadados diferentes dos do app.
+
+### Seletor de classes/assuntos (árvores eSAJ e TPU)
 
 Os campos `classe`, `assunto`, `orgao_julgador` (cjsg) e `vara` (cjpg) dos
 tribunais da família eSAJ usam um seletor visual em árvore, alimentado por JSON
 em `<sigla>.<endpoint>.<campo>.json`. Esses arquivos são gerados pelos métodos
-`listar_*` do juscraper (a partir dos endpoints `*TreeSelect.do`) via:
+`listar_*` do juscraper (a partir dos endpoints `*TreeSelect.do`).
+
+Na aba DataJud, `classe`, `assunto` e `movimentos_codigo` usam as tabelas da
+**TPU (Tabela Processual Unificada) do CNJ**, as mesmas codificações que o
+DataJud usa. Elas vêm da API pública da TPU
+(`gateway.cloud.pje.jus.br/tpu/api/v1/publico/download/{classes,assuntos,movimentos}`)
+e viram `tpu.classes.json`, `tpu.assuntos.json` e `tpu.movimentos.json` (~1 MB no
+total). O código TPU aparece junto do nome (ex.: "Usucapião (49)") e dá para
+buscar por nome ou por código; itens inativos continuam na lista, sinalizados,
+porque processos antigos ainda os usam.
+
+Tudo é gerado por:
 ```bash
-.venv/Scripts/python.exe scripts/gen_trees.py   # popula web/public/trees/ (local)
+.venv/Scripts/python.exe scripts/gen_trees.py              # eSAJ + TPU (local)
+.venv/Scripts/python.exe scripts/gen_trees.py --tpu-only   # só a TPU (rápido)
 ```
-Para **não pesar o versionamento** (somam ~11 MB), as árvores ficam na release
+Para **não pesar o versionamento** (somam ~12 MB), as árvores ficam na release
 [`trees`](https://github.com/lab-dados/juscraper-app/releases/tag/trees) do repo,
 e **não** são commitadas (`web/public/trees/` está no `.gitignore`). O
 [`deploy.yml`](.github/workflows/deploy.yml) baixa os assets dessa release antes do
 build, então o GitHub Pages serve as árvores na mesma origem (sem CORS). O app cai
-no input manual de IDs se uma árvore não estiver disponível.
+no input manual de IDs (ou de códigos TPU) se uma árvore não estiver disponível.
 
 As árvores mudam devagar, então a Action **não** as regenera no run diário: só no
 cron mensal (dia 1) ou quando disparada com `regen_trees=true`. Nesses casos ela
 roda `gen_trees.py`, sobe os JSON para a release (`gh release upload trees ... --clobber`)
-e dispara o deploy. O `gen_trees.py` vira no-op se o juscraper instalado não tiver
-os métodos `listar_*`.
+e dispara o deploy. O `gen_trees.py` vira no-op para o eSAJ se o juscraper
+instalado não tiver os métodos `listar_*`, e segue sem a TPU se a API da TPU
+estiver fora do ar.
 
 ## Deploy
 
@@ -192,3 +256,10 @@ os métodos `listar_*`.
 - O total de páginas é capturado pelo argumento `total` do `tqdm` que o
   juscraper cria internamente; quando o tribunal não o expõe, a UI pede um
   limite de páginas.
+- DataJud: a API exige `Authorization: APIKey <chave pública do CNJ>` (a chave
+  é pública e vem no próprio `juscraper`). Pela especificação do Fetch, o
+  curinga `*` em `Access-Control-Allow-Headers` não cobre `Authorization`, por
+  isso o proxy lista esse cabeçalho explicitamente.
+- DataJud: o mesmo número CNJ pode aparecer em mais de uma linha quando o
+  tribunal envia um documento por grau (G1, G2, JE...). As colunas `grau` e
+  `id_datajud` distinguem os documentos.

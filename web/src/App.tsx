@@ -1,18 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import courtsMetaRaw from "./data/courts_meta.json";
-import type { CountResult, CourtsMeta, Endpoint, RunResult } from "./types";
+import type { CountResult, CourtEndpoint, CourtsMeta, Endpoint, RunResult } from "./types";
 import { JuscraperClient } from "./pyodide/client";
 import { LiveSearchNotice } from "./components/LiveSearchNotice";
 import { SearchTabs } from "./components/SearchTabs";
-import { TribunalSelect } from "./components/TribunalSelect";
+import { DatajudTribunalSelect, TribunalSelect } from "./components/TribunalSelect";
 import { DynamicForm, initialValues, type FormValues } from "./components/DynamicForm";
 import { EstimateDialog } from "./components/EstimateDialog";
 import { ProgressBar } from "./components/ProgressBar";
 import { ResultsTable } from "./components/ResultsTable";
+import { AmostraDatajud } from "./components/AmostraDatajud";
 import { CodePreview } from "./components/CodePreview";
 import { ErrorIssueCard } from "./components/ErrorIssueCard";
 import { Footer } from "./components/Footer";
-import { buildCode } from "./lib/utils";
+import { buildCode, buildDatajudCode, callParams, datajudProblem } from "./lib/utils";
+import { DATAJUD } from "./lib/links";
 import { track } from "./lib/analytics";
 
 const meta = courtsMetaRaw as CourtsMeta;
@@ -20,6 +22,10 @@ const PROXY_URL = (import.meta.env.VITE_PROXY_URL as string | undefined) ?? "";
 // Pasta dos wheels vendorizados; o worker le o manifest.json para descobrir a
 // versao corrente (atualizada pela Action diaria que rebuilda o juscraper).
 const WHEELS_BASE_URL = new URL(`${import.meta.env.BASE_URL}wheels/`, window.location.href).href;
+
+// Aba DataJud: o juscraper e chamado como jus.scraper("datajud").listar_processos(...)
+const DJ_SIGLA = "datajud";
+const DJ_METODO = "listar_processos";
 
 type Phase = "form" | "counting" | "estimate" | "running" | "done";
 type BootState = "loading" | "ready" | "error";
@@ -39,6 +45,8 @@ export default function App() {
 
   const [endpoint, setEndpoint] = useState<Endpoint>("cjsg");
   const [sigla, setSigla] = useState<string | null>(null);
+  // Tribunal da aba DataJud (sigla do CNJ, ex.: "TJSP", "TRT2", "TRE-SP").
+  const [djSigla, setDjSigla] = useState<string | null>(null);
   const [values, setValues] = useState<FormValues>({});
 
   const [phase, setPhase] = useState<Phase>("form");
@@ -65,8 +73,12 @@ export default function App() {
       });
   }, []);
 
+  const isDj = endpoint === "datajud";
+  const djMeta = meta.datajud;
   const court = useMemo(() => meta.courts.find((c) => c.sigla === sigla) ?? null, [sigla]);
-  const fields = court?.endpoints[endpoint]?.fields ?? [];
+  const fields = isDj ? djMeta?.fields ?? [] : court?.endpoints[endpoint as CourtEndpoint]?.fields ?? [];
+  // Tribunal escolhido na aba atual.
+  const activeSigla = isDj ? djSigla : sigla;
 
   // Reinicia o formulário quando muda tribunal/endpoint.
   useEffect(() => {
@@ -77,20 +89,41 @@ export default function App() {
     setError(null);
     setCount(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sigla, endpoint]);
+  }, [sigla, djSigla, endpoint]);
+
+  // DataJud: parâmetros tipados (tribunal primeiro, para o código ficar legível).
+  const djParams = useMemo<Record<string, unknown>>(
+    () => (isDj && djSigla ? { tribunal: djSigla, ...callParams(fields, values) } : {}),
+    [isDj, djSigla, fields, values]
+  );
+  const djCfg = values.mostrar_movs ? DATAJUD.comMovs : DATAJUD.semMovs;
+  const djProblem = isDj ? datajudProblem(djParams) : null;
 
   const requiredOk = fields
     .filter((f) => f.required)
     .every((f) => String(values[f.name] ?? "").trim() !== "");
 
-  const canRun = boot === "ready" && sigla != null && court?.support.status !== "unsupported" && requiredOk;
+  const canRun = isDj
+    ? boot === "ready" && djSigla != null && djMeta != null && !djProblem
+    : boot === "ready" && sigla != null && court?.support.status !== "unsupported" && requiredOk;
+
+  // O que vai para o Pyodide (e para o card de erro): sigla, método e parâmetros.
+  const target = isDj
+    ? { sigla: DJ_SIGLA, endpoint: DJ_METODO, params: djParams }
+    : { sigla: sigla ?? "", endpoint, params: values };
+
+  const code = (paginas: number | null) =>
+    isDj
+      ? buildDatajudCode({ params: djParams, paginas, tamanhoPagina: count?.tamanho_pagina })
+      : buildCode({ sigla: sigla ?? "", endpoint, params: values, paginas });
 
   async function handleCalcular() {
-    if (!clientRef.current || !sigla) return;
-    track("calcular", { tribunal: sigla, endpoint });
+    if (!clientRef.current || !activeSigla) return;
+    track("calcular", { tribunal: activeSigla, endpoint });
     setError(null);
     setPhase("counting");
-    const res = await clientRef.current.count(sigla, endpoint, values).catch((e) => ({
+    const params = isDj ? { ...target.params, tamanho_pagina: djCfg.tamanhoPagina } : target.params;
+    const res = await clientRef.current.count(target.sigla, target.endpoint, params).catch((e) => ({
       ok: false,
       n_pags: null,
       sleep_time: 1,
@@ -98,13 +131,13 @@ export default function App() {
       traceback: String(e),
     } as CountResult));
     if (!res.ok) {
-      track("erro", { tribunal: sigla, endpoint, etapa: "calcular" });
+      track("erro", { tribunal: activeSigla, endpoint, etapa: "calcular" });
       setError({
         error: res.error ?? "Erro ao calcular páginas",
         traceback: res.traceback ?? "",
-        sigla,
-        endpoint,
-        params: values,
+        sigla: target.sigla,
+        endpoint: target.endpoint,
+        params: target.params,
       });
       setPhase("form");
       return;
@@ -114,12 +147,17 @@ export default function App() {
   }
 
   async function handleConfirm(paginas: number | null) {
-    if (!clientRef.current || !sigla) return;
+    if (!clientRef.current || !activeSigla) return;
+    // DataJud: sempre manda o nº de requisições, para a barra de progresso ter total.
+    const runPaginas = isDj ? paginas ?? count?.n_pags ?? null : paginas;
+    const params = isDj
+      ? { ...target.params, tamanho_pagina: count?.tamanho_pagina ?? djCfg.tamanhoPagina }
+      : target.params;
     setPhase("running");
     setConfigOpen(false);
-    setProgress({ done: 0, total: paginas ?? count?.n_pags ?? 0 });
+    setProgress({ done: 0, total: runPaginas ?? count?.n_pags ?? 0 });
     const res = await clientRef.current
-      .run(sigla, endpoint, values, paginas, (done, total) => setProgress({ done, total }))
+      .run(target.sigla, target.endpoint, params, runPaginas, (done, total) => setProgress({ done, total }))
       .catch((e) => ({
         ok: false,
         columns: [],
@@ -131,23 +169,26 @@ export default function App() {
         traceback: String(e),
       } as RunResult));
     if (!res.ok) {
-      track("erro", { tribunal: sigla, endpoint, etapa: "busca" });
+      track("erro", { tribunal: activeSigla, endpoint, etapa: "busca" });
       setError({
         error: res.error ?? "Erro na busca",
         traceback: res.traceback ?? "",
-        sigla,
-        endpoint,
-        params: values,
+        sigla: target.sigla,
+        endpoint: target.endpoint,
+        params: target.params,
       });
       setPhase("form");
       setConfigOpen(true);
       return;
     }
-    track("busca", { tribunal: sigla, endpoint, paginas: paginas ?? 0, linhas: res.n_rows });
+    track("busca", { tribunal: activeSigla, endpoint, paginas: paginas ?? 0, linhas: res.n_rows });
     setRanPaginas(paginas);
     setResult(res);
     setPhase("done");
   }
+
+  const showForm = isDj ? djSigla != null && djMeta != null : court != null;
+  const djFilePrefix = `datajud_${activeSigla ?? ""}_processos`;
 
   return (
     <div className="min-h-screen">
@@ -185,8 +226,8 @@ export default function App() {
               <h2 className="text-sm font-semibold text-fgv-800">Configurações da busca</h2>
               {!configOpen && (
                 <p className="mt-0.5 truncate text-xs text-fgv-500">
-                  {sigla
-                    ? `${sigla.toUpperCase()} · ${meta.endpoint_labels[endpoint]}`
+                  {activeSigla
+                    ? `${activeSigla.toUpperCase()} · ${meta.endpoint_labels[endpoint]}`
                     : "Configure o tribunal e os filtros"}
                 </p>
               )}
@@ -209,13 +250,63 @@ export default function App() {
 
           {configOpen && (
             <div className="border-t border-fgv-100 px-5 pb-5 pt-4">
-              <SearchTabs value={endpoint} onChange={setEndpoint} />
+              <SearchTabs value={endpoint} onChange={setEndpoint} hasDatajud={djMeta != null} />
               <div className="mt-5 space-y-5">
-                <TribunalSelect courts={meta.courts} endpoint={endpoint} value={sigla} onChange={setSigla} />
-
-                {court && fields.length > 0 && (
+                {isDj ? (
                   <>
-                    <DynamicForm fields={fields} values={values} onChange={setValues} sigla={sigla ?? ""} />
+                    <div className="space-y-2">
+                      <p className="text-sm text-fgv-600">
+                        Lista processos pela <strong>data de ajuizamento</strong>, a partir da API
+                        pública do DataJud (CNJ), com classe, assuntos, órgão julgador e, se quiser,
+                        as movimentações. Serve para desenhos prospectivos (ex.: todos os processos
+                        de usucapião distribuídos no TJSP em 2022), inclusive os que ainda não têm
+                        decisão.
+                      </p>
+                      <ul className="list-disc space-y-0.5 pl-5 text-xs text-fgv-500">
+                        <li>
+                          A ordem da lista não é aleatória (agrupa os processos por vara): para
+                          amostrar, baixe a lista inteira e use o sorteio da tela de resultados.
+                        </li>
+                        <li>
+                          O mesmo número CNJ tem um registro por grau (ex.: a execução fiscal no 1º
+                          grau e a apelação, classe 198, no 2º); o filtro de classe traz só o
+                          registro daquela classe.
+                        </li>
+                        <li>
+                          Os tribunais mandam os dados ao CNJ com atraso de 3 a 4 semanas, e o
+                          DataJud não traz valor da causa nem partes.
+                        </li>
+                        <li>
+                          Para filtrar por movimentação, prefira os códigos TPU: os atalhos de tipo
+                          de movimentação são incompletos.
+                        </li>
+                      </ul>
+                    </div>
+                    <DatajudTribunalSelect
+                      tribunais={djMeta?.tribunais ?? []}
+                      value={djSigla}
+                      onChange={setDjSigla}
+                    />
+                  </>
+                ) : (
+                  <TribunalSelect
+                    courts={meta.courts}
+                    endpoint={endpoint as CourtEndpoint}
+                    value={sigla}
+                    onChange={setSigla}
+                  />
+                )}
+
+                {showForm && fields.length > 0 && (
+                  <>
+                    <DynamicForm
+                      fields={fields}
+                      values={values}
+                      onChange={setValues}
+                      sigla={activeSigla ?? ""}
+                      showCheckboxHelp={isDj}
+                    />
+                    {djProblem && <p className="text-sm text-rose-600">{djProblem}</p>}
                     <div className="flex items-center gap-3">
                       <button
                         className="btn-primary"
@@ -228,17 +319,13 @@ export default function App() {
                         <span className="text-sm text-fgv-400">Aguarde o Python carregar…</span>
                       )}
                     </div>
-                    {sigla && (
-                      <CodePreview
-                        code={buildCode({ sigla, endpoint, params: values, paginas: null })}
-                        sigla={sigla}
-                        endpoint={endpoint}
-                      />
+                    {activeSigla && (
+                      <CodePreview code={code(null)} sigla={target.sigla} endpoint={target.endpoint} />
                     )}
                   </>
                 )}
 
-                {court && fields.length === 0 && (
+                {!isDj && court && fields.length === 0 && (
                   <p className="text-sm text-fgv-500">
                     Este tribunal não oferece {meta.endpoint_labels[endpoint]} no juscraper.
                   </p>
@@ -252,16 +339,26 @@ export default function App() {
           <ProgressBar
             done={progress.done}
             total={progress.total}
-            label={`Baixando ${sigla?.toUpperCase()} · ${meta.endpoint_labels[endpoint]}`}
+            label={`Baixando ${activeSigla?.toUpperCase()} · ${meta.endpoint_labels[endpoint]}`}
           />
         )}
 
-        {phase === "done" && result && sigla && (
+        {phase === "done" && result && activeSigla && isDj && (
+          <AmostraDatajud
+            result={result}
+            total={count?.n_itens ?? null}
+            sigla={activeSigla}
+            filePrefix={djFilePrefix}
+          />
+        )}
+
+        {phase === "done" && result && activeSigla && (
           <ResultsTable
             result={result}
-            sigla={sigla}
+            sigla={activeSigla}
             endpoint={endpoint}
-            code={buildCode({ sigla, endpoint, params: values, paginas: ranPaginas })}
+            code={code(ranPaginas)}
+            filePrefix={isDj ? djFilePrefix : undefined}
           />
         )}
 
@@ -283,6 +380,17 @@ export default function App() {
           sleepTime={count.sleep_time}
           onConfirm={handleConfirm}
           onCancel={() => setPhase("form")}
+          datajud={
+            isDj
+              ? {
+                  total: count.n_itens ?? 0,
+                  exato: count.relation !== "gte",
+                  tamanhoPagina: count.tamanho_pagina ?? djCfg.tamanhoPagina,
+                  maxProcessos: djCfg.maxProcessos,
+                  segPorPagina: djCfg.segPorPagina,
+                }
+              : undefined
+          }
         />
       )}
 

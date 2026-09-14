@@ -26,7 +26,10 @@ import juscraper
 from juscraper import _SCRAPERS
 
 # Endpoints app-controlados que NAO viram campo de formulario.
-HIDDEN_FIELDS = {"paginas"}
+#   paginas    -> controlado pelo dialogo de estimativa.
+#   count_only -> o app ja estima o total antes de baixar; com True o juscraper
+#                 devolve um int (e nao um DataFrame), o que quebrava o download.
+HIDDEN_FIELDS = {"paginas", "count_only"}
 # Campos que vao para o grupo "avancado" (colapsavel).
 ADVANCED_FIELDS = {"auto_chunk"}
 
@@ -270,6 +273,204 @@ def _find_input_schema(sigla: str, kind: str) -> type[BaseModel] | None:
     return candidates[0] if candidates else None
 
 
+# --------------------------------------------------------------------------
+# Aba "Processos (DataJud)": agregador da API publica do CNJ
+# --------------------------------------------------------------------------
+# Os campos saem do schema InputListarProcessosDataJud (fonte da verdade); os
+# dicionarios abaixo so ajustam a apresentacao (rotulo, tipo de widget, ajuda
+# em linguagem simples). Campo novo no schema aparece com o descritor generico.
+
+# Campos que nao viram widget no formulario:
+#   tribunal                 -> seletor proprio acima do formulario
+#   paginas / tamanho_pagina -> dialogo de estimativa (o app escolhe o tamanho)
+#   query                    -> override Elasticsearch (dict); so via codigo
+DATAJUD_HIDDEN = {"tribunal", "paginas", "tamanho_pagina", "query"}
+
+TPU_CONSULTA = "https://www.cnj.jus.br/sgt/consulta_publica_{tabela}.php"
+
+TIPOS_MOVIMENTACAO_LABELS = {
+    "decisao": "Decisão",
+    "sentenca": "Sentença",
+    "julgamento": "Julgamento",
+    "tutela": "Tutela provisória",
+    "transito_julgado": "Trânsito em julgado",
+}
+
+
+def _tpu_tree(campo: str, arquivo: str, multiple: bool) -> dict[str, Any]:
+    # ``file`` aponta para web/public/trees/<arquivo> (gerado por
+    # scripts/gen_trees.py a partir da API da TPU). A arvore e a mesma para
+    # todos os tribunais, por isso nao depende da sigla.
+    return {"endpoint": "datajud", "campo": campo, "multiple": multiple, "file": arquivo}
+
+
+def _datajud_overrides(tipos_movimentacao: list[str]) -> dict[str, dict[str, Any]]:
+    return {
+        "data_ajuizamento_inicio": {
+            "label": "Ajuizamento: de",
+            "type": "isodate",
+            "format": "AAAA-MM-DD",
+            "help": "Data de ajuizamento (distribuição) do processo.",
+        },
+        "data_ajuizamento_fim": {
+            "label": "Ajuizamento: até",
+            "type": "isodate",
+            "format": "AAAA-MM-DD",
+            "help": None,
+        },
+        "classe": {
+            "label": "Classe processual (TPU/CNJ)",
+            "type": "tree",
+            "tree": _tpu_tree("classe", "tpu.classes.json", multiple=False),
+            "default": [],
+            "help": "Uma classe da Tabela Processual Unificada do CNJ. Ex.: Usucapião (49).",
+            "help_url": TPU_CONSULTA.format(tabela="classes"),
+        },
+        "assunto": {
+            "label": "Assuntos (TPU/CNJ)",
+            "type": "tree",
+            "tree": _tpu_tree("assunto", "tpu.assuntos.json", multiple=True),
+            "default": [],
+            "help": "Traz processos com pelo menos um dos assuntos marcados. "
+                    "Marcar um assunto marca também os assuntos filhos.",
+            "help_url": TPU_CONSULTA.format(tabela="assuntos"),
+        },
+        "orgao_julgador": {
+            "label": "Órgão julgador (nome)",
+            "type": "text",
+            "help": "Busca pelo nome, como aparece no DataJud (ex.: 02 CUMULATIVA DE PERUIBE).",
+        },
+        "tipos_movimentacao": {
+            "label": "Com movimentação do tipo (atalhos)",
+            "type": "multiselect",
+            "options": tipos_movimentacao,
+            "option_labels": {
+                t: TIPOS_MOVIMENTACAO_LABELS.get(t, t.replace("_", " ").capitalize())
+                for t in tipos_movimentacao
+            },
+            "default": [],
+            # Os atalhos vem do juscraper (TIPOS_MOVIMENTACAO) e sao incompletos:
+            # medido no TJSP, "sentenca" acha 104 mandados de seguranca de 1.050.
+            "help": "Atalhos incompletos do juscraper: \"Sentença\" não inclui, por "
+                    "exemplo, 442/446 (segurança concedida/denegada), 463 (desistência), "
+                    "454 (indeferimento da inicial) nem 196 (extinção da execução); "
+                    "\"Tutela\" não inclui 339/792 (liminar concedida/não concedida). "
+                    "Para um filtro preciso, use os códigos TPU no campo ao lado.",
+        },
+        "movimentos_codigo": {
+            "label": "Com movimentação de código (TPU/CNJ)",
+            "type": "tree",
+            "tree": _tpu_tree("movimentos_codigo", "tpu.movimentos.json", multiple=True),
+            "value_type": "int",
+            "default": [],
+            "help": "Traz processos com pelo menos uma movimentação desses códigos "
+                    "(preferível aos atalhos). Comuns: 219 procedência, 220 improcedência, "
+                    "221 procedência em parte, 442/446 segurança concedida/denegada, "
+                    "463 desistência, 454 indeferimento da inicial, 196 extinção da "
+                    "execução, 339/792 liminar concedida/não concedida, 848 trânsito "
+                    "em julgado.",
+            "help_url": TPU_CONSULTA.format(tabela="movimentos"),
+        },
+        "mostrar_movs": {
+            "label": "Incluir movimentações (datas, códigos e nomes)",
+            "type": "checkbox",
+            "help": "Necessário para calcular durações (ex.: do ajuizamento até a "
+                    "sentença). Deixa o download mais lento.",
+        },
+        "ano_ajuizamento": {
+            "label": "Ano de ajuizamento",
+            "type": "number",
+            "advanced": True,
+            "default": "",
+            "help": "Atalho para o ano inteiro. Use o ano OU o intervalo de datas, não os dois.",
+        },
+        "numero_processo": {
+            "label": "Números de processo (CNJ)",
+            "type": "list",
+            "advanced": True,
+            "default": [],
+            "help": "Restringe a uma lista de processos (números CNJ separados por vírgula).",
+        },
+    }
+
+
+# Ordem de exibicao (campos fora da lista vao para o fim, na ordem do schema).
+DATAJUD_ORDER = [
+    "data_ajuizamento_inicio", "data_ajuizamento_fim", "classe", "assunto",
+    "orgao_julgador", "tipos_movimentacao", "movimentos_codigo", "mostrar_movs",
+    "ano_ajuizamento", "numero_processo",
+]
+
+DATAJUD_GRUPOS = [
+    "Justiça Estadual", "Justiça Federal", "Justiça do Trabalho",
+    "Justiça Eleitoral", "Justiça Militar", "Tribunais superiores e CNJ",
+]
+
+
+def _datajud_grupo(sigla: str) -> str:
+    if sigla in {"STF", "STJ", "CNJ"}:
+        return "Tribunais superiores e CNJ"
+    if sigla == "STM" or (sigla.startswith("TJM") and len(sigla) == 5):
+        return "Justiça Militar"  # TJMMG, TJMRS, TJMSP (TJMA/TJMG/... sao estaduais)
+    if sigla.startswith("TRF"):
+        return "Justiça Federal"
+    if sigla.startswith("TRT") or sigla == "TST":
+        return "Justiça do Trabalho"
+    if sigla.startswith("TRE") or sigla == "TSE":
+        return "Justiça Eleitoral"
+    return "Justiça Estadual"
+
+
+def _datajud_sort_key(sigla: str) -> tuple[int, str, int]:
+    # TRT2 antes de TRT10: separa prefixo e numero.
+    m = re.match(r"^(\D+?)(\d+)$", sigla)
+    prefixo, num = (m.group(1), int(m.group(2))) if m else (sigla, 0)
+    return (DATAJUD_GRUPOS.index(_datajud_grupo(sigla)), prefixo, num)
+
+
+def build_datajud() -> dict[str, Any] | None:
+    """Metadados da aba DataJud. ``None`` se o juscraper nao tiver o agregador."""
+    try:
+        from juscraper.aggregators.datajud.client import DatajudScraper
+        from juscraper.aggregators.datajud.mappings import TIPOS_MOVIMENTACAO, TRIBUNAL_TO_ALIAS
+        from juscraper.aggregators.datajud.schemas import InputListarProcessosDataJud
+    except ImportError:
+        return None
+    if not hasattr(DatajudScraper, "contar_processos"):
+        return None
+
+    docs = extract_param_docs(DatajudScraper.listar_processos)
+    overrides = _datajud_overrides(sorted(TIPOS_MOVIMENTACAO))
+    fields: list[dict[str, Any]] = []
+    for name, field in InputListarProcessosDataJud.model_fields.items():
+        if name in DATAJUD_HIDDEN:
+            continue
+        base, _ = _strip_optional(field.annotation)
+        if typing.get_origin(base) is dict or base is dict:
+            continue  # dicts (ex.: query) nao tem widget
+        desc = describe_field(name, field, docs)
+        if desc is None:
+            continue
+        desc.update(overrides.get(name, {}))
+        fields.append(desc)
+
+    ordem = {n: i for i, n in enumerate(DATAJUD_ORDER)}
+    fields.sort(key=lambda f: ordem.get(f["name"], len(ordem)))
+
+    # Uma entrada por alias do DataJud (TRE-DF e TRE-DFT sao o mesmo indice:
+    # fica a primeira sigla do mapping, a oficial).
+    vistos: set[str] = set()
+    tribunais: list[dict[str, str]] = []
+    for sigla, alias in TRIBUNAL_TO_ALIAS.items():
+        if alias in vistos:
+            continue
+        vistos.add(alias)
+        tribunais.append({"sigla": sigla, "grupo": _datajud_grupo(sigla)})
+    tribunais.sort(key=lambda t: _datajud_sort_key(t["sigla"]))
+
+    return {"fields": fields, "tribunais": tribunais}
+
+
 def build() -> dict[str, Any]:
     courts: list[dict[str, Any]] = []
     for sigla in sorted(_SCRAPERS):
@@ -303,14 +504,20 @@ def build() -> dict[str, Any]:
             "endpoints": endpoints,
             "support": support,
         })
-    return {
+    data: dict[str, Any] = {
         "juscraper_version": juscraper.__version__,
         "endpoint_labels": {
             "cjsg": "Jurisprudencia (2o grau)",
             "cjpg": "Banco de Sentencas (1o grau)",
+            "datajud": "Processos (DataJud)",
         },
         "courts": courts,
     }
+    # Aba DataJud: so aparece no front se o juscraper tiver o agregador.
+    datajud = build_datajud()
+    if datajud is not None:
+        data["datajud"] = datajud
+    return data
 
 
 def main() -> None:
@@ -320,7 +527,9 @@ def main() -> None:
     out.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     n_cjsg = sum("cjsg" in c["endpoints"] for c in data["courts"])
     n_cjpg = sum("cjpg" in c["endpoints"] for c in data["courts"])
-    print(f"OK: {len(data['courts'])} tribunais | cjsg={n_cjsg} cjpg={n_cjpg}")
+    dj = data.get("datajud")
+    n_dj = f"datajud={len(dj['tribunais'])} tribunais/{len(dj['fields'])} campos" if dj else "datajud=ausente"
+    print(f"OK: {len(data['courts'])} tribunais | cjsg={n_cjsg} cjpg={n_cjpg} | {n_dj}")
     print(f"-> {out}")
 
 

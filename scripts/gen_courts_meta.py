@@ -26,7 +26,10 @@ import juscraper
 from juscraper import _SCRAPERS
 
 # Endpoints app-controlados que NAO viram campo de formulario.
-HIDDEN_FIELDS = {"paginas"}
+#   paginas    -> controlado pelo dialogo de estimativa.
+#   count_only -> o app ja estima o total antes de baixar; com True o juscraper
+#                 devolve um int (e nao um DataFrame), o que quebrava o download.
+HIDDEN_FIELDS = {"paginas", "count_only"}
 # Campos que vao para o grupo "avancado" (colapsavel).
 ADVANCED_FIELDS = {"auto_chunk"}
 

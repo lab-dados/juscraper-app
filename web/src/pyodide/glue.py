@@ -370,6 +370,14 @@ def run(sigla: str, endpoint: str, params, paginas, progress) -> str:
         finally:
             restore()
 
+        # Defesa: com ``count_only=True`` o juscraper devolve um int (total de
+        # resultados) em vez de um DataFrame. O formulario nao expoe mais esse
+        # campo, mas se chegar aqui vira uma tabela de uma linha em vez de
+        # quebrar com AttributeError no to_json.
+        if isinstance(df, (int, float)) and not isinstance(df, bool):
+            import pandas as pd
+            df = pd.DataFrame({"total_resultados": [int(df)]})
+
         # Serializacao robusta (datas viram ISO; nada de NaN cru no JSON).
         records = json.loads(df.to_json(orient="records", date_format="iso", force_ascii=False))
         csv_buf = io.StringIO()

@@ -58,15 +58,6 @@
               "default": ""
             },
             {
-              "name": "count_only",
-              "label": "Count only",
-              "required": false,
-              "advanced": false,
-              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
-              "type": "checkbox",
-              "default": false
-            },
-            {
               "name": "ementa",
               "label": "Termo na ementa",
               "required": false,
@@ -234,15 +225,6 @@
               "default": ""
             },
             {
-              "name": "count_only",
-              "label": "Count only",
-              "required": false,
-              "advanced": false,
-              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
-              "type": "checkbox",
-              "default": false
-            },
-            {
               "name": "ementa",
               "label": "Termo na ementa",
               "required": false,
@@ -408,15 +390,6 @@
               "help": "ID interno da comarca. Backend: cdComarca (single-value, nao aceita lista).",
               "type": "text",
               "default": ""
-            },
-            {
-              "name": "count_only",
-              "label": "Count only",
-              "required": false,
-              "advanced": false,
-              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
-              "type": "checkbox",
-              "default": false
             },
             {
               "name": "ementa",
@@ -830,15 +803,6 @@
               "help": "ID interno da comarca. Backend: cdComarca (single-value, nao aceita lista).",
               "type": "text",
               "default": ""
-            },
-            {
-              "name": "count_only",
-              "label": "Count only",
-              "required": false,
-              "advanced": false,
-              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
-              "type": "checkbox",
-              "default": false
             },
             {
               "name": "ementa",
@@ -1553,15 +1517,6 @@
               "help": "ID interno da comarca. Backend: cdComarca (single-value, nao aceita lista).",
               "type": "text",
               "default": ""
-            },
-            {
-              "name": "count_only",
-              "label": "Count only",
-              "required": false,
-              "advanced": false,
-              "help": "Default False. Se True, faz so a chamada inicial da pagina 1, extrai o total de resultados via cjsg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de uma coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - **soma bruta** (sem dedup por cd_acordao), pode divergir ligeiramente de len(cjsg(...)) quando ha acordaos republicados. paginas e ignorado (emite UserWarning).",
-              "type": "checkbox",
-              "default": false
             },
             {
               "name": "ementa",
@@ -2943,15 +2898,6 @@
               "default": ""
             },
             {
-              "name": "count_only",
-              "label": "Count only",
-              "required": false,
-              "advanced": false,
-              "help": "Default False. Se True, faz so a chamada inicial e retorna int com o total de resultados em vez de pd.DataFrame. Util pra estimar wall-clock antes de coleta longa (issue #92). Soma bruta cross-janela em auto_chunk=True.",
-              "type": "checkbox",
-              "default": false
-            },
-            {
               "name": "ementa",
               "label": "Termo na ementa",
               "required": false,
@@ -3056,15 +3002,6 @@
                 "multiple": true
               },
               "default": []
-            },
-            {
-              "name": "count_only",
-              "label": "Count only",
-              "required": false,
-              "advanced": false,
-              "help": "Default False. Se True, faz so o GET inicial, extrai o total de resultados via cjpg_n_results e retorna int em vez de pd.DataFrame. Util pra estimar wall-clock antes de coleta longa (issue #92). Com auto_chunk=True + janela > 366 dias, itera janelas disjuntas e soma - soma bruta (sem dedup por id_processo). paginas e ignorado (emite UserWarning).",
-              "type": "checkbox",
-              "default": false
             },
             {
               "name": "id_processo",

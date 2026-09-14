@@ -36,7 +36,11 @@ const HOP_BY_HOP = new Set([
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, HEAD",
-  "Access-Control-Allow-Headers": "*",
+  // `Authorization` precisa ser listado explicitamente: pela especificacao do
+  // Fetch, o curinga `*` NAO cobre esse cabecalho no preflight. A API publica do
+  // DataJud (CNJ) exige `Authorization: APIKey ...`; sem isto, navegadores que
+  // seguem a especificacao a risca bloqueiam a requisicao antes de chegar aqui.
+  "Access-Control-Allow-Headers": "*, Authorization",
   "Access-Control-Max-Age": "86400",
   "Access-Control-Expose-Headers": "X-Set-Cookie, X-Final-Url, X-Upstream-Status",
 };

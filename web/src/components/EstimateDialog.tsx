@@ -183,6 +183,11 @@ function DatajudBody({
           Estimativa aproximada (cerca de {Math.round(perPage)}s por requisição de{" "}
           {fmt(tamanhoPagina)} processos). A API do DataJud varia bastante conforme a carga.
         </p>
+        <p className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-900">
+          A ordem do DataJud não é aleatória (agrupa por vara): com limite, você recebe os
+          primeiros processos da lista, não uma amostra. Para amostrar, baixe a lista inteira e
+          use o sorteio na tela de resultados.
+        </p>
         <div>
           <label className="label" htmlFor="cap">
             Limite de processos (até {fmt(maxProcessos)})

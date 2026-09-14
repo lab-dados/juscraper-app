@@ -341,7 +341,7 @@ def _datajud_overrides(tipos_movimentacao: list[str]) -> dict[str, dict[str, Any
             "help": "Busca pelo nome, como aparece no DataJud (ex.: 02 CUMULATIVA DE PERUIBE).",
         },
         "tipos_movimentacao": {
-            "label": "Com movimentação do tipo",
+            "label": "Com movimentação do tipo (atalhos)",
             "type": "multiselect",
             "options": tipos_movimentacao,
             "option_labels": {
@@ -349,7 +349,27 @@ def _datajud_overrides(tipos_movimentacao: list[str]) -> dict[str, dict[str, Any
                 for t in tipos_movimentacao
             },
             "default": [],
-            "help": "Traz só processos com pelo menos uma movimentação dessas categorias.",
+            # Os atalhos vem do juscraper (TIPOS_MOVIMENTACAO) e sao incompletos:
+            # medido no TJSP, "sentenca" acha 104 mandados de seguranca de 1.050.
+            "help": "Atalhos incompletos do juscraper: \"Sentença\" não inclui, por "
+                    "exemplo, 442/446 (segurança concedida/denegada), 463 (desistência), "
+                    "454 (indeferimento da inicial) nem 196 (extinção da execução); "
+                    "\"Tutela\" não inclui 339/792 (liminar concedida/não concedida). "
+                    "Para um filtro preciso, use os códigos TPU no campo ao lado.",
+        },
+        "movimentos_codigo": {
+            "label": "Com movimentação de código (TPU/CNJ)",
+            "type": "tree",
+            "tree": _tpu_tree("movimentos_codigo", "tpu.movimentos.json", multiple=True),
+            "value_type": "int",
+            "default": [],
+            "help": "Traz processos com pelo menos uma movimentação desses códigos "
+                    "(preferível aos atalhos). Comuns: 219 procedência, 220 improcedência, "
+                    "221 procedência em parte, 442/446 segurança concedida/denegada, "
+                    "463 desistência, 454 indeferimento da inicial, 196 extinção da "
+                    "execução, 339/792 liminar concedida/não concedida, 848 trânsito "
+                    "em julgado.",
+            "help_url": TPU_CONSULTA.format(tabela="movimentos"),
         },
         "mostrar_movs": {
             "label": "Incluir movimentações (datas, códigos e nomes)",
@@ -364,16 +384,6 @@ def _datajud_overrides(tipos_movimentacao: list[str]) -> dict[str, dict[str, Any
             "default": "",
             "help": "Atalho para o ano inteiro. Use o ano OU o intervalo de datas, não os dois.",
         },
-        "movimentos_codigo": {
-            "label": "Com movimentação de código (TPU/CNJ)",
-            "type": "tree",
-            "advanced": True,
-            "tree": _tpu_tree("movimentos_codigo", "tpu.movimentos.json", multiple=True),
-            "value_type": "int",
-            "default": [],
-            "help": "Códigos de movimento da TPU. Somam-se aos tipos marcados acima.",
-            "help_url": TPU_CONSULTA.format(tabela="movimentos"),
-        },
         "numero_processo": {
             "label": "Números de processo (CNJ)",
             "type": "list",
@@ -387,8 +397,8 @@ def _datajud_overrides(tipos_movimentacao: list[str]) -> dict[str, dict[str, Any
 # Ordem de exibicao (campos fora da lista vao para o fim, na ordem do schema).
 DATAJUD_ORDER = [
     "data_ajuizamento_inicio", "data_ajuizamento_fim", "classe", "assunto",
-    "orgao_julgador", "tipos_movimentacao", "mostrar_movs",
-    "ano_ajuizamento", "movimentos_codigo", "numero_processo",
+    "orgao_julgador", "tipos_movimentacao", "movimentos_codigo", "mostrar_movs",
+    "ano_ajuizamento", "numero_processo",
 ]
 
 DATAJUD_GRUPOS = [

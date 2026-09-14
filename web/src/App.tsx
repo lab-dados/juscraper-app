@@ -9,6 +9,7 @@ import { DynamicForm, initialValues, type FormValues } from "./components/Dynami
 import { EstimateDialog } from "./components/EstimateDialog";
 import { ProgressBar } from "./components/ProgressBar";
 import { ResultsTable } from "./components/ResultsTable";
+import { AmostraDatajud } from "./components/AmostraDatajud";
 import { CodePreview } from "./components/CodePreview";
 import { ErrorIssueCard } from "./components/ErrorIssueCard";
 import { Footer } from "./components/Footer";
@@ -187,6 +188,7 @@ export default function App() {
   }
 
   const showForm = isDj ? djSigla != null && djMeta != null : court != null;
+  const djFilePrefix = `datajud_${activeSigla ?? ""}_processos`;
 
   return (
     <div className="min-h-screen">
@@ -252,14 +254,34 @@ export default function App() {
               <div className="mt-5 space-y-5">
                 {isDj ? (
                   <>
-                    <p className="text-sm text-fgv-600">
-                      Lista processos pela <strong>data de ajuizamento</strong>, a partir da API
-                      pública do DataJud (CNJ), com classe, assuntos, órgão julgador e, se quiser,
-                      as movimentações. Serve para desenhos prospectivos (ex.: todos os processos
-                      de usucapião distribuídos no TJSP em 2022), inclusive os que ainda não têm
-                      decisão. Os dados são enviados pelos tribunais ao CNJ e podem ter atraso ou
-                      lacunas.
-                    </p>
+                    <div className="space-y-2">
+                      <p className="text-sm text-fgv-600">
+                        Lista processos pela <strong>data de ajuizamento</strong>, a partir da API
+                        pública do DataJud (CNJ), com classe, assuntos, órgão julgador e, se quiser,
+                        as movimentações. Serve para desenhos prospectivos (ex.: todos os processos
+                        de usucapião distribuídos no TJSP em 2022), inclusive os que ainda não têm
+                        decisão.
+                      </p>
+                      <ul className="list-disc space-y-0.5 pl-5 text-xs text-fgv-500">
+                        <li>
+                          A ordem da lista não é aleatória (agrupa os processos por vara): para
+                          amostrar, baixe a lista inteira e use o sorteio da tela de resultados.
+                        </li>
+                        <li>
+                          O mesmo número CNJ tem um registro por grau (ex.: a execução fiscal no 1º
+                          grau e a apelação, classe 198, no 2º); o filtro de classe traz só o
+                          registro daquela classe.
+                        </li>
+                        <li>
+                          Os tribunais mandam os dados ao CNJ com atraso de 3 a 4 semanas, e o
+                          DataJud não traz valor da causa nem partes.
+                        </li>
+                        <li>
+                          Para filtrar por movimentação, prefira os códigos TPU: os atalhos de tipo
+                          de movimentação são incompletos.
+                        </li>
+                      </ul>
+                    </div>
                     <DatajudTribunalSelect
                       tribunais={djMeta?.tribunais ?? []}
                       value={djSigla}
@@ -321,13 +343,22 @@ export default function App() {
           />
         )}
 
+        {phase === "done" && result && activeSigla && isDj && (
+          <AmostraDatajud
+            result={result}
+            total={count?.n_itens ?? null}
+            sigla={activeSigla}
+            filePrefix={djFilePrefix}
+          />
+        )}
+
         {phase === "done" && result && activeSigla && (
           <ResultsTable
             result={result}
             sigla={activeSigla}
             endpoint={endpoint}
             code={code(ranPaginas)}
-            filePrefix={isDj ? `datajud_${activeSigla}_processos` : undefined}
+            filePrefix={isDj ? djFilePrefix : undefined}
           />
         )}
 

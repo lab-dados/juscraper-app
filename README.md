@@ -121,6 +121,26 @@ calcular durações (ex.: do ajuizamento até a sentença). As datas do CNJ, que
 vêm em dois formatos (ISO e `AAAAMMDDhhmmss`), saem normalizadas como
 `AAAA-MM-DD hh:mm:ss`.
 
+Cuidados com o DataJud (a aba avisa a pessoa usuária sobre cada um):
+- **A ordem da lista não é aleatória.** A API ordena por um identificador
+  interno que agrupa os processos por vara (e concentra, no começo, registros
+  atípicos, como processos sem movimentação). Por isso a tela de resultados
+  tem um **sorteio de amostra aleatória simples** com semente (gerador
+  mulberry32 sobre a lista em ordem de `id_datajud`, Fisher-Yates parcial):
+  com a mesma lista e a mesma semente, a amostra sai igual. Dá para baixar a
+  amostra e as movimentações dos processos sorteados. Se a lista baixada foi
+  cortada pelo limite, a tela avisa que a amostra não representa o total.
+- **Um registro por grau.** O mesmo número CNJ aparece uma vez por grau (ex.:
+  a execução fiscal no 1º grau e a apelação, classe 198, no 2º); o filtro de
+  classe traz só o registro daquela classe.
+- **Atraso e lacunas.** Os tribunais mandam os dados ao CNJ com atraso de 3 a
+  4 semanas, e o DataJud não traz valor da causa nem partes.
+- **Atalhos de movimentação incompletos.** Os `tipos_movimentacao` do
+  juscraper não cobrem códigos TPU importantes (ex.: "sentença" sem 442/446,
+  segurança concedida/denegada, nem 463, desistência; "tutela" sem 339/792,
+  liminar). O formulário deixa os códigos TPU (`movimentos_codigo`) no
+  formulário principal, com os códigos mais comuns na ajuda.
+
 ### Suporte por tribunal
 - **cjsg**: todos os 25 TJs.
 - **cjpg**: TJES, TJSP, TJTO.

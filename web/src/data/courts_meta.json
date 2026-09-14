@@ -3298,10 +3298,10 @@
       },
       {
         "name": "tipos_movimentacao",
-        "label": "Com movimentação do tipo",
+        "label": "Com movimentação do tipo (atalhos)",
         "required": false,
         "advanced": false,
-        "help": "Traz só processos com pelo menos uma movimentação dessas categorias.",
+        "help": "Atalhos incompletos do juscraper: \"Sentença\" não inclui, por exemplo, 442/446 (segurança concedida/denegada), 463 (desistência), 454 (indeferimento da inicial) nem 196 (extinção da execução); \"Tutela\" não inclui 339/792 (liminar concedida/não concedida). Para um filtro preciso, use os códigos TPU no campo ao lado.",
         "type": "multiselect",
         "default": [],
         "options": [
@@ -3320,6 +3320,23 @@
         }
       },
       {
+        "name": "movimentos_codigo",
+        "label": "Com movimentação de código (TPU/CNJ)",
+        "required": false,
+        "advanced": false,
+        "help": "Traz processos com pelo menos uma movimentação desses códigos (preferível aos atalhos). Comuns: 219 procedência, 220 improcedência, 221 procedência em parte, 442/446 segurança concedida/denegada, 463 desistência, 454 indeferimento da inicial, 196 extinção da execução, 339/792 liminar concedida/não concedida, 848 trânsito em julgado.",
+        "type": "tree",
+        "default": [],
+        "tree": {
+          "endpoint": "datajud",
+          "campo": "movimentos_codigo",
+          "multiple": true,
+          "file": "tpu.movimentos.json"
+        },
+        "value_type": "int",
+        "help_url": "https://www.cnj.jus.br/sgt/consulta_publica_movimentos.php"
+      },
+      {
         "name": "mostrar_movs",
         "label": "Incluir movimentações (datas, códigos e nomes)",
         "required": false,
@@ -3336,23 +3353,6 @@
         "help": "Atalho para o ano inteiro. Use o ano OU o intervalo de datas, não os dois.",
         "type": "number",
         "default": ""
-      },
-      {
-        "name": "movimentos_codigo",
-        "label": "Com movimentação de código (TPU/CNJ)",
-        "required": false,
-        "advanced": true,
-        "help": "Códigos de movimento da TPU. Somam-se aos tipos marcados acima.",
-        "type": "tree",
-        "default": [],
-        "tree": {
-          "endpoint": "datajud",
-          "campo": "movimentos_codigo",
-          "multiple": true,
-          "file": "tpu.movimentos.json"
-        },
-        "value_type": "int",
-        "help_url": "https://www.cnj.jus.br/sgt/consulta_publica_movimentos.php"
       },
       {
         "name": "numero_processo",

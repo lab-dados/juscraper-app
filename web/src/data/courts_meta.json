@@ -1,5 +1,5 @@
 {
-  "juscraper_version": "0.3.0",
+  "juscraper_version": "0.4.0",
   "endpoint_labels": {
     "cjsg": "Jurisprudencia (2o grau)",
     "cjpg": "Banco de Sentencas (1o grau)",

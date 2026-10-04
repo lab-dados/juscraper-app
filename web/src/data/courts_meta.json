@@ -2116,7 +2116,7 @@
               "label": "Orgao",
               "required": false,
               "advanced": false,
-              "help": "Orgao julgador (deve bater com o valor do dropdown).",
+              "help": "Órgão julgador (deve bater com o valor do dropdown).",
               "type": "text",
               "default": ""
             },
@@ -2134,7 +2134,7 @@
               "label": "Tipo",
               "required": false,
               "advanced": false,
-              "help": "Tipo de decisao. Opcoes: \"Acordao\", \"Decisao Terminativa\", \"Sumula\".",
+              "help": "Tipo de decisão. Opções: \"Acordao\", \"Decisao Terminativa\", \"Sumula\".",
               "type": "text",
               "default": ""
             },

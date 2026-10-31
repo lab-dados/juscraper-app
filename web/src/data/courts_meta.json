@@ -161,7 +161,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 1 ano, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -328,7 +328,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 1 ano, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -495,7 +495,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 1 ano, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -908,7 +908,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 1 ano, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -1622,7 +1622,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 1 ano, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }
@@ -2959,7 +2959,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao.",
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 1 ano, divide internamente em janelas, baixa cada uma e concatena com dedup por cd_acordao.",
               "type": "checkbox",
               "default": true
             }
@@ -3052,7 +3052,7 @@
               "label": "Dividir intervalos longos automaticamente",
               "required": false,
               "advanced": true,
-              "help": "Default True. Quando o intervalo data_julgamento_* excede 366 dias, divide internamente em janelas, baixa cada uma e concatena com dedup por id_processo. Veja a secao \"Auto-chunking\" abaixo.",
+              "help": "Default True. Quando o intervalo data_julgamento_* excede 1 ano, divide internamente em janelas, baixa cada uma e concatena com dedup por id_processo. Veja a secao \"Auto-chunking\" abaixo.",
               "type": "checkbox",
               "default": true
             }

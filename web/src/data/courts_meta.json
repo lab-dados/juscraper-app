@@ -1645,16 +1645,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
-              "type": "text",
-              "default": ""
-            },
-            {
-              "name": "classe",
-              "label": "Classe (ID interno)",
-              "required": false,
-              "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Termo livre buscado no documento.",
               "type": "text",
               "default": ""
             },
@@ -1663,7 +1654,7 @@
               "label": "Orgao julgador (ID interno)",
               "required": false,
               "advanced": false,
-              "help": "Use o ID interno do tribunal (ex.: copiado da busca avancada do site).",
+              "help": "Nome do órgão julgador, como aparece na coluna orgao_julgador (ex.: \"PRIMEIRA CÂMARA DE DIREITO PRIVADO\"), com a mesma normalização de relator. None não filtra.",
               "type": "text",
               "default": ""
             },
@@ -1672,7 +1663,7 @@
               "label": "Relator",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Nome do relator. A API casa só o nome exato; acentos, espaços repetidos e caixa são normalizados (\"João da Silva\" vai como \"JOAO DA SILVA\"). A API atual não aceita mais o identificador numérico, que é rejeitado antes da rede. None não filtra.",
               "type": "text",
               "default": ""
             },
@@ -1681,7 +1672,7 @@
               "label": "Tamanho pagina",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Documentos por página, de 1 a 10.000. Default 10.",
               "type": "text",
               "default": 10
             },
@@ -1690,7 +1681,7 @@
               "label": "Thesaurus",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Se True, a API amplia a busca com sinônimos. Default False.",
               "type": "checkbox",
               "default": false
             },
@@ -1699,7 +1690,7 @@
               "label": "Tipo consulta",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"Acordao\" (default) ou \"DecisaoMonocratica\".",
               "type": "text",
               "default": "Acordao"
             },
@@ -1708,26 +1699,26 @@
               "label": "Tipo processo",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "\"Civel\", \"Cível\" ou \"Criminal\". None não filtra.",
               "type": "text",
               "default": ""
             },
             {
-              "name": "data_julgamento_fim",
-              "label": "Julgamento - fim",
+              "name": "data_publicacao_fim",
+              "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Fim do intervalo de publicação, inclusivo: o dia informado entra inteiro. Com só data_publicacao_inicio, assume a data de hoje e emite UserWarning.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
             },
             {
-              "name": "data_julgamento_inicio",
-              "label": "Julgamento - inicio",
+              "name": "data_publicacao_inicio",
+              "label": "Publicacao - inicio",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Início do intervalo de publicação, em DD/MM/AAAA ou AAAA-MM-DD. Com só data_publicacao_fim, assume o piso OPEN_ENDED_DATE_FLOOR e emite UserWarning.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""

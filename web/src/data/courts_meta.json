@@ -2524,7 +2524,7 @@
               "label": "Tipo",
               "required": false,
               "advanced": false,
-              "help": "Tipos de documento. Default backend [\"EMENTA\"]. Opcoes incluem \"ACORDAO\", \"DECISAO\", \"SENTENCA\", \"VOTO\", etc.",
+              "help": "Tipos de documento. Default backend [\"EMENTA\"]. O backend compara o valor exato, com acento e em maiusculas: \"EMENTA\", \"ACÓRDÃO\", \"DECISÃO\", \"SENTENÇA\" e \"VOTO\". \"ACORDAO\" ou \"ementa\" devolvem zero resultados.",
               "type": "text",
               "default": ""
             },

@@ -2168,16 +2168,25 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": null,
+              "help": "Termo de busca livre.",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "incluir_corte_idh",
+              "label": "Incluir corte idh",
+              "required": false,
+              "advanced": false,
+              "help": "Mantém os precedentes da Corte IDH no resultado. Default False. Ligado, o DataFrame ganha as colunas fonte (\"TJPR\" ou \"Corte IDH\") e caso (nome do caso, só nas linhas da Corte IDH); nessas linhas processo, orgao_julgador e relator ficam vazios, porque o portal não os tem. O portal não aplica a esses casos os filtros de data: eles vêm com a própria data_julgamento, fora do intervalo pedido.",
+              "type": "checkbox",
+              "default": false
             },
             {
               "name": "data_julgamento_fim",
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Fim do intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2187,7 +2196,7 @@
               "label": "Julgamento - inicio",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Início do intervalo de julgamento.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2197,7 +2206,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Fim do intervalo de publicação.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2207,7 +2216,7 @@
               "label": "Publicacao - inicio",
               "required": false,
               "advanced": false,
-              "help": null,
+              "help": "Início do intervalo de publicação.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2785,7 +2794,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": "YYYY-MM-DD. Mapeado para dt_decisao_* no backend.",
+              "help": "YYYY-MM-DD ou DD/MM/YYYY. Mapeado para dt_decisao_* no backend, que recebe DD/MM/YYYY.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2805,7 +2814,7 @@
               "label": "Publicacao - fim",
               "required": false,
               "advanced": false,
-              "help": "YYYY-MM-DD.",
+              "help": "YYYY-MM-DD ou DD/MM/YYYY.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""

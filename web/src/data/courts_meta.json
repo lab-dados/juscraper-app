@@ -959,6 +959,19 @@
               "default": ""
             },
             {
+              "name": "buscar_em",
+              "label": "Buscar em",
+              "required": false,
+              "advanced": false,
+              "help": "Onde procurar pesquisa. \"ementa\" (default) busca no espelho do acórdão, que traz a ementa, quando espelho=True. \"inteiro_teor\" busca também no inteiro teor, o que amplia o resultado. Outro valor levanta ValidationError. Backend: inteiroTeor.",
+              "type": "select",
+              "options": [
+                "ementa",
+                "inteiro_teor"
+              ],
+              "default": "ementa"
+            },
+            {
               "name": "espelho",
               "label": "Espelho",
               "required": false,
@@ -966,15 +979,6 @@
               "help": "Pesquisa no espelho do acórdão. Default True. Backend: espelho.",
               "type": "checkbox",
               "default": true
-            },
-            {
-              "name": "inteiro_teor",
-              "label": "Inteiro teor",
-              "required": false,
-              "advanced": false,
-              "help": "Pesquisa também no inteiro teor, o que amplia o resultado. Default False. Backend: inteiroTeor.",
-              "type": "checkbox",
-              "default": false
             },
             {
               "name": "sinonimos",
@@ -1845,7 +1849,7 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": "Termo de busca livre.",
+              "help": "Termo de busca livre, procurado no campo indicado por buscar_em.",
               "type": "text",
               "default": ""
             },
@@ -1857,6 +1861,19 @@
               "help": "Assunto.",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "buscar_em",
+              "label": "Buscar em",
+              "required": false,
+              "advanced": false,
+              "help": "Onde procurar pesquisa: \"ementa\" (default; None tambem) ou \"inteiro_teor\" (texto integral da decisao, que inclui a ementa), as duas opcoes do portal. Outro valor levanta ValidationError. Em 26/11/2026, a API ignorava a escolha, tambem no site: as duas procuravam o termo na ementa e no inteiro teor e traziam o mesmo resultado.",
+              "type": "select",
+              "options": [
+                "ementa",
+                "inteiro_teor"
+              ],
+              "default": "ementa"
             },
             {
               "name": "classe",
@@ -1884,20 +1901,6 @@
               "help": "Lista de origens (default backend: [\"tribunal de justica do estado do para\"]).",
               "type": "text",
               "default": ""
-            },
-            {
-              "name": "query_scope",
-              "label": "Query scope",
-              "required": false,
-              "advanced": false,
-              "help": "\"ementa\" (default) ou \"inteiroTeor\".",
-              "type": "select",
-              "options": [
-                "ementa",
-                "inteiroTeor",
-                "inteiroteor"
-              ],
-              "default": "ementa"
             },
             {
               "name": "query_type",
@@ -1962,7 +1965,7 @@
               "label": "Julgamento - fim",
               "required": false,
               "advanced": false,
-              "help": "DD/MM/AAAA, DD-MM-AAAA, AAAA-MM-DD, AAAA/MM/DD, date ou datetime. Enviadas ao portal um dia antes, que compensa o desvio do filtro do TJPA (#508).",
+              "help": "DD/MM/AAAA, DD-MM-AAAA, AAAA-MM-DD, AAAA/MM/DD, date ou datetime.",
               "type": "date",
               "format": "DD/MM/AAAA",
               "default": ""
@@ -2471,17 +2474,36 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": "Termo de busca livre (busca na ementa).",
+              "help": "Termo de busca, procurado no campo indicado por buscar_em (por padrao, a ementa).",
               "type": "text",
               "default": ""
+            },
+            {
+              "name": "buscar_em",
+              "label": "Buscar em",
+              "required": false,
+              "advanced": false,
+              "help": "Onde procurar pesquisa: \"ementa\" (default) ou \"inteiro_teor\" (texto integral da decisao, campo \"Inteiro teor\" do portal). No portal so os acordaos tem ementa; o inteiro teor existe em acordaos, monocraticas e sentencas. Outro valor levanta ValidationError.",
+              "type": "select",
+              "options": [
+                "ementa",
+                "inteiro_teor"
+              ],
+              "default": "ementa"
             },
             {
               "name": "decisoes",
               "label": "Decisoes",
               "required": false,
               "advanced": false,
-              "help": "\"Monocraticas\", \"Colegiadas\", \"Sentencas\" ou vazio para todos.",
-              "type": "text",
+              "help": "Tipo de decisao, com os valores do portal: \"Decisão\" (monocraticas), \"Acórdão\" (colegiadas), \"Sentença\" ou vazio para todas. Outro valor levanta ValidationError. \"Sentença\" so existe no 1o grau e \"Acórdão\" so no 2o; \"Decisão\" existe nos dois. Como o portal nao devolve resultados para as combinacoes cruzadas, \"Sentença\" com grau=\"2\", \"TJ\" ou \"TR\" e \"Acórdão\" com grau=\"1\" levantam ValidationError. Por padrao, pesquisa busca na ementa, e no portal so os acordaos tem ementa: para buscar termo em \"Decisão\" ou \"Sentença\", ver buscar_em.",
+              "type": "select",
+              "options": [
+                "",
+                "Decisão",
+                "Acórdão",
+                "Sentença"
+              ],
               "default": ""
             },
             {
@@ -2489,8 +2511,13 @@
               "label": "Grau",
               "required": false,
               "advanced": false,
-              "help": "\"1\" (primeiro), \"2\" (segundo) ou vazio para todos.",
-              "type": "text",
+              "help": "\"1\" (primeiro), \"2\" (segundo) ou vazio para todos, sempre como texto. Outro valor (inclusive o inteiro 2) levanta ValidationError. grau=\"1\" com decisoes=\"Acórdão\" e grau=\"2\" com decisoes=\"Sentença\" tambem levantam, porque o portal nao devolve resultados para elas. Decisoes de 1o grau nao tem ementa: com grau=\"1\", buscar termo com buscar_em=\"inteiro_teor\".",
+              "type": "select",
+              "options": [
+                "",
+                "1",
+                "2"
+              ],
               "default": ""
             },
             {
@@ -2534,8 +2561,13 @@
               "label": "Jurisdicoes",
               "required": false,
               "advanced": false,
-              "help": "\"Tribunal de Justica\", \"Turmas Recursais\" ou vazio para todos.",
-              "type": "text",
+              "help": "Jurisdicao, com os valores do portal: \"TJ\" (orgaos do Tribunal de Justica), \"TR\" (Turmas Recursais e Turma de Uniformizacao) ou vazio para todas. Outro valor levanta ValidationError. \"TJ\" e \"TR\" so trazem decisoes de 2o grau: com grau=\"1\" ou decisoes=\"Sentença\", em que o portal nao devolve resultados, levantam ValidationError.",
+              "type": "select",
+              "options": [
+                "",
+                "TJ",
+                "TR"
+              ],
               "default": ""
             },
             {
@@ -2552,8 +2584,13 @@
               "label": "Sistema",
               "required": false,
               "advanced": false,
-              "help": "\"PJE\", \"SAJ\" ou vazio para todos.",
-              "type": "text",
+              "help": "Sistema processual, com os valores do portal: \"PJE\", \"SAJ\" ou vazio para todos. Outro valor (inclusive \"pje\") levanta ValidationError.",
+              "type": "select",
+              "options": [
+                "",
+                "PJE",
+                "SAJ"
+              ],
               "default": ""
             },
             {
@@ -2910,22 +2947,22 @@
               "label": "Termo de pesquisa",
               "required": true,
               "advanced": false,
-              "help": "Termo de busca livre.",
+              "help": "Termo de busca livre, procurado no campo indicado por buscar_em.",
               "type": "text",
               "default": ""
             },
             {
-              "name": "campo",
-              "label": "Campo",
+              "name": "buscar_em",
+              "label": "Buscar em",
               "required": false,
               "advanced": false,
-              "help": "Campo de busca: \"E\" para ementa (default), \"I\" para inteiro teor.",
+              "help": "Onde procurar pesquisa: \"ementa\" (default; None tambem) ou \"inteiro_teor\" (texto integral da decisao, que inclui a ementa). Outro valor levanta ValidationError.",
               "type": "select",
               "options": [
-                "E",
-                "I"
+                "ementa",
+                "inteiro_teor"
               ],
-              "default": "E"
+              "default": "ementa"
             },
             {
               "name": "processo",
